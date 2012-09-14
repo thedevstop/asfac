@@ -3,6 +3,7 @@ package com.thedevstop.asfac
 	import adobe.utils.CustomActions;
 	import asunit.framework.TestCase;
 	import asunit.framework.TestSuite;
+	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
 	import flash.utils.Dictionary;
 	/**
 	 * ...
@@ -37,23 +38,33 @@ package com.thedevstop.asfac
 		
 		public function test_should_allow_register_concrete_instance():void
 		{
-			var container:AsFactory = new AsFactory();
+			var factory:AsFactory = new AsFactory();
 			
 			var instance:Object = { foo:"bar" };
-			container.Register(instance, Object);
+			factory.registerInstance(instance, Object);
 			
-			var result:Object = container.Resolve(Object);
+			var result:Object = factory.resolve(Object);
 			assertSame(instance, result);
 		}
 		
 		public function test_should_allow_register_type():void
 		{
-			var container:AsFactory = new AsFactory();
+			var factory:AsFactory = new AsFactory();
 			
-			container.Register(Dictionary, Dictionary);
+			factory.registerType(Dictionary, Dictionary);
 			
-			var result:Object = container.Resolve(Dictionary);
-			assertTrue(result.constructor == Dictionary);
+			var result:Object = factory.resolve(Dictionary);
+			assertTrue(result.constructor === Dictionary);
+		}
+		
+		public function test_should_resolve_types_with_required_constructor_parameters():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.registerType(ConstructorWithRequiredParameters, ConstructorWithRequiredParameters);
+			
+			var result:Object = factory.resolve(ConstructorWithRequiredParameters);
+			assertTrue(result.constructor === ConstructorWithRequiredParameters);
 		}
 	}
 }

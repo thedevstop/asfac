@@ -15,7 +15,7 @@ package com.thedevstop.asfac
 			_registrations = new Dictionary();
 		}
 		
-		public function Register(instance:Object, type:Class):void
+		public function registerInstance(instance:Object, type:Class):void
 		{
 			_registrations[type] = function():Object
 			{
@@ -23,10 +23,19 @@ package com.thedevstop.asfac
 			};
 		}
 		
-		public function Resolve(type:Class):*
+		public function registerType(instanceType:Class, type:Class):void 
+		{
+			_registrations[type] = function():Object
+			{
+				return new instanceType();
+			};
+		}
+		
+		public function resolve(type:Class):*
 		{
 			return _registrations[type]();
 		}
+		
 	}
 
 }
