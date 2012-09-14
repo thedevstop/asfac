@@ -35,7 +35,10 @@ package com.thedevstop.asfac
 		
 		public function resolve(type:Class):*
 		{
-			return _registrations[type]();
+			if (_registrations[type] !== undefined)
+				return _registrations[type]();
+				
+			return resolveByClass(type);
 		}
 		
 		private function resolveByClass(type:Class):*
