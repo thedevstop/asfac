@@ -74,5 +74,26 @@ package com.thedevstop.asfac
 			var result:Object = factory.resolve(Dictionary);
 			assertTrue(result is Dictionary);
 		}
+		
+		public function test_should_resolve_types_with_only_optional_constructor_parameters():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.registerType(Dictionary, Dictionary);
+			
+			var result:Object = factory.resolve(Dictionary);
+			assertTrue(result is Dictionary);			
+		}
+		
+		public function test_should_allow_register_callback():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var source:Array = [1, 2, 3];
+			factory.registerCallback(function() { return source; }, Array);
+			
+			var result:Array = factory.resolve(Array);
+			assertSame(source, result);			
+		}
 	}
 }
