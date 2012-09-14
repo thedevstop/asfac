@@ -41,6 +41,11 @@ package com.thedevstop.asfac
 			return resolveByClass(type);
 		}
 		
+		public function registerCallback(callback:Function, type:Class):void 
+		{
+			_registrations[type] = callback;
+		}
+		
 		private function resolveByClass(type:Class):*
 		{
 			var parameters:Array = [];

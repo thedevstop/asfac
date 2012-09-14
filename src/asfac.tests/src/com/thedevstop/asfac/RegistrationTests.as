@@ -90,7 +90,7 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var source:Array = [1, 2, 3];
-			factory.registerCallback(function() { return source; }, Array);
+			factory.registerCallback(function():Array { return source; }, Array);
 			
 			var result:Array = factory.resolve(Array);
 			assertSame(source, result);			
