@@ -12,9 +12,11 @@ package com.thedevstop.asfac
 		{
 			super();
 			
-			addTest(new RegistrationTests("should_allow_register_concrete_instance"));
+			var rt:RegistrationTests = new RegistrationTests();
+			for each(var testName:String in rt.getTestMethods())
+			{
+				addTest(new RegistrationTests(testName));
+			}
 		}
-		
 	}
-
 }

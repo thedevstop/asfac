@@ -3,6 +3,7 @@ package com.thedevstop.asfac
 	import adobe.utils.CustomActions;
 	import asunit.framework.TestCase;
 	import asunit.framework.TestSuite;
+	import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author David Ruttka
@@ -10,7 +11,7 @@ package com.thedevstop.asfac
 	public class RegistrationTests extends TestCase
 	{
 		
-		public function RegistrationTests(testMethod:String) 
+		public function RegistrationTests(testMethod:String = null) 
 		{
 			super(testMethod);
 		}
@@ -18,7 +19,7 @@ package com.thedevstop.asfac
 		/*
 		 * Should be able to register in the following ways
 		 * 
-		 * register a concrete instance as a type, so this instance is returned whenever that type is requested
+		 * DONE register a concrete instance as a type, so this instance is returned whenever that type is requested
 		 * register a type as a type, so that a new instance of that type is returned whenever requested
 		 * register a callback as a type, so that the result of the callback is returned whenever requested
 		 * 
@@ -34,7 +35,7 @@ package com.thedevstop.asfac
 		 * 		than .Resolve<bar>(meh)
 		 */
 		
-		public function should_allow_register_concrete_instance():void
+		public function test_should_allow_register_concrete_instance():void
 		{
 			var container:AsFactory = new AsFactory();
 			
@@ -43,6 +44,16 @@ package com.thedevstop.asfac
 			
 			var result:Object = container.Resolve(Object);
 			assertSame(instance, result);
+		}
+		
+		public function test_should_allow_register_type():void
+		{
+			var container:AsFactory = new AsFactory();
+			
+			container.Register(Dictionary, Dictionary);
+			
+			var result:Object = container.Resolve(Dictionary);
+			assertTrue(result.constructor == Dictionary);
 		}
 	}
 }
