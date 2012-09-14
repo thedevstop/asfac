@@ -66,5 +66,13 @@ package com.thedevstop.asfac
 			var result:Object = factory.resolve(ConstructorWithRequiredParameters);
 			assertTrue(result.constructor === ConstructorWithRequiredParameters);
 		}
+		
+		public function test_should_attempt_to_resolve_unregistered_types():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var result:Object = factory.resolve(Dictionary);
+			assertTrue(result is Dictionary);
+		}
 	}
 }
