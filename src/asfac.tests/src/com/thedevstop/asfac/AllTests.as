@@ -12,7 +12,7 @@ package com.thedevstop.asfac
 		{
 			super();
 			
-			addTest(new SampleTests("isTrueTrue"));
+			addTest(new RegistrationTests("should_allow_register_concrete_instance"));
 		}
 		
 	}
