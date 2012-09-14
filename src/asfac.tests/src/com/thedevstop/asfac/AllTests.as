@@ -11,6 +11,8 @@ package com.thedevstop.asfac
 		public function AllTests() 
 		{
 			super();
+			
+			addTest(new SampleTests("isTrueTrue"));
 		}
 		
 	}
