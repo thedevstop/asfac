@@ -6,7 +6,7 @@ package com.thedevstop.asfac
 	
 	/**
 	 * ...
-	 * @author David Ruttka
+	 * @author
 	 */
 	public class AsFactory
 	{
