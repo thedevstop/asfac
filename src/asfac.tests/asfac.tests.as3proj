@@ -17,6 +17,7 @@
   <classpaths>
     <class path="src" />
     <class path="..\..\lib\lukebayes-asunit-4.0.3-0-ge2af845\lukebayes-asunit-e2af845\as3\src" />
+    <class path="..\asfac\src" />
   </classpaths>
   <!-- Build options -->
   <build>
