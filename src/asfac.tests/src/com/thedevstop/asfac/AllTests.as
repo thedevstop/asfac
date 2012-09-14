@@ -12,9 +12,11 @@ package com.thedevstop.asfac
 		{
 			super();
 			
-			addTest(new SampleTests("isTrueTrue"));
+			var rt:RegistrationTests = new RegistrationTests();
+			for each(var testName:String in rt.getTestMethods())
+			{
+				addTest(new RegistrationTests(testName));
+			}
 		}
-		
 	}
-
 }
