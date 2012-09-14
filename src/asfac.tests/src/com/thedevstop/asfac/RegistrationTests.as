@@ -95,5 +95,17 @@ package com.thedevstop.asfac
 			var result:Array = factory.resolve(Array);
 			assertSame(source, result);			
 		}
+		
+		public function test_resolving_constructor_params_should_use_registered_instances():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var instance:Dictionary = new Dictionary();
+			instance["foo"] = "bar";
+			factory.registerInstance(instance, Dictionary);
+			
+			var result:ConstructorWithRequiredParameters = factory.resolve(ConstructorWithRequiredParameters);
+			assertSame(instance, result.dictionary);
+		}
 	}
 }

@@ -56,7 +56,7 @@ package com.thedevstop.asfac
 					break;
 	
 				var parameterType:Class = Class(getDefinitionByName(parameter.@type.toString()));
-				parameters.push(resolveByClass(parameterType));
+				parameters.push(resolve(parameterType));
 			}
 			return createObject(type, parameters);
 		}
