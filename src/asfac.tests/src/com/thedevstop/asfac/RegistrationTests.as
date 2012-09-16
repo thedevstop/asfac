@@ -78,6 +78,17 @@ package com.thedevstop.asfac
 			assertThrows(IllegalOperationError, registerFunc);
 		}
 		
+		public function test_should_allow_register_callback_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, true);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertSame(result1, result2);
+		}
+		
 		public function test_should_allow_register_type_as_singleton():void
 		{
 			var factory:AsFactory = new AsFactory();

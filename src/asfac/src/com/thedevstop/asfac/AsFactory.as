@@ -55,9 +55,9 @@ package com.thedevstop.asfac
 			return resolveByClass(type);
 		}
 		
-		public function registerCallback(callback:Function, type:Class):void 
+		public function registerCallback(callback:Function, type:Class, asSingleton:Boolean=false):void 
 		{
-			if (callback.length > 0)
+			if (callback.length !== 0)
 				throw new IllegalOperationError("Callback function registered for {0} must not have arguments".replace("{0}", getQualifiedClassName(type)));
 				
 			_registrations[type] = callback;
@@ -82,7 +82,7 @@ package com.thedevstop.asfac
 			}
 			return createObject(type, parameters);
 		}
-
+		
 		private function createObject(type:Class, parameters:Array):*
 		{
 			switch (parameters.length)
