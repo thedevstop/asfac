@@ -1,10 +1,10 @@
 package com.thedevstop.asfac
 {
+	import avmplus.getQualifiedClassName;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.describeType;
 	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
 	
 	/**
 	 * ...
@@ -21,30 +21,22 @@ package com.thedevstop.asfac
 		
 		public function registerInstance(instance:Object, type:Class):void
 		{
-			_registrations[type] = function():Object
+			var returnInstance:Function = function():Object
 			{
 				return instance;
 			};
+			
+			registerCallback(returnInstance, type, false);
 		}
 		
 		public function registerType(instanceType:Class, type:Class, asSingleton:Boolean=false):void 
 		{
-			if (asSingleton)
-				_registrations[type] = (function(instanceType:Class):Function
-				{
-					var instance:Object = null;
-					return function():Object {
-						if (!instance)
-							instance = resolveByClass(instanceType);
-							
-						return instance;
-					};
-				})(instanceType);
-			else
-				_registrations[type] = function():Object
-				{
-					return resolveByClass(instanceType);
-				};
+			var resolveType:Function = function():Object
+			{
+				return resolveByClass(instanceType);
+			};
+			
+			registerCallback(resolveType, type, asSingleton);
 		}
 		
 		public function resolve(type:Class):*
