@@ -1,5 +1,6 @@
 package com.thedevstop.asfac
 {
+	import flash.errors.IllegalOperationError;
 	import flash.utils.describeType;
 	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
@@ -50,11 +51,16 @@ package com.thedevstop.asfac
 		{
 			var parameters:Array = [];
 			var description:XML = describeType(type);
-			for each (var parameter:XML in description.factory.constructor.parameter)
+			var constructor:XMLList = description.factory.constructor;
+			
+			if (constructor.length() === 0)
+				throw new IllegalOperationError("Interface {0} must be registered before it can be resolved.".replace("{0}", description.@name.toString()));
+			
+			for each (var parameter:XML in constructor.parameter)
 			{
 				if (parameter.@optional.toString() != "false")
 					break;
-	
+				
 				var parameterType:Class = Class(getDefinitionByName(parameter.@type.toString()));
 				parameters.push(resolve(parameterType));
 			}

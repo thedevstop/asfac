@@ -2,6 +2,8 @@ package com.thedevstop.asfac
 {
 	import asunit.framework.TestCase;
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
+	import com.thedevstop.asfac.stubs.IPoint;
+	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
 	
 	/**
@@ -53,6 +55,13 @@ package com.thedevstop.asfac
 			
 			var result:ConstructorWithRequiredParameters = factory.resolve(ConstructorWithRequiredParameters);
 			assertSame(instance, result.dictionary);
+		}
+		
+		public function test_should_fail_when_resolving_unregistered_interface():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			assertThrows(IllegalOperationError, function():IPoint { return factory.resolve(IPoint); } );
 		}
 	}
 }
