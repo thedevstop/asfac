@@ -56,6 +56,7 @@ package com.thedevstop.asfac
 		
 		public function registerCallback(callback:Function, type:Class):void 
 		{
+			var description:XML = describeType(callback);
 			_registrations[type] = callback;
 		}
 		

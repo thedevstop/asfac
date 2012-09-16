@@ -61,7 +61,12 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			assertThrows(IllegalOperationError, function():IPoint { return factory.resolve(IPoint); } );
+			var resolveFunc:Function = function():void
+			{
+				factory.resolve(IPoint);
+			};
+			
+			assertThrows(IllegalOperationError, resolveFunc);
 		}
 	}
 }

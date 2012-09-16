@@ -1,6 +1,7 @@
 package com.thedevstop.asfac 
 {
 	import asunit.framework.TestCase;
+	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
 	
 	/**
@@ -63,6 +64,18 @@ package com.thedevstop.asfac
 			
 			var result:Array = factory.resolve(Array);
 			assertSame(source, result);			
+		}
+		
+		public function test_should_error_when_registering_callback_with_arguments():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var registerFunc:Function = function():void
+			{
+				factory.registerCallback(function(name:String):Array { return [1, 2, 3]; }, Array);
+			};
+			
+			assertThrows(IllegalOperationError, registerFunc);
 		}
 		
 		public function test_should_allow_register_type_as_singleton():void
