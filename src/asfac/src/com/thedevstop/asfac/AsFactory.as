@@ -1,5 +1,6 @@
 package com.thedevstop.asfac
 {
+	import avmplus.getQualifiedClassName;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.describeType;
 	import flash.utils.Dictionary;
@@ -56,7 +57,9 @@ package com.thedevstop.asfac
 		
 		public function registerCallback(callback:Function, type:Class):void 
 		{
-			var description:XML = describeType(callback);
+			if (callback.length > 0)
+				throw new IllegalOperationError("Callback function registered for {0} must not have arguments".replace("{0}", getQualifiedClassName(type)));
+				
 			_registrations[type] = callback;
 		}
 		
