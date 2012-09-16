@@ -26,7 +26,7 @@ package com.thedevstop.asfac
 			};
 		}
 		
-		public function registerType(instanceType:Class, type:Class):void 
+		public function registerType(instanceType:Class, type:Class, asSingleton:Boolean=false):void 
 		{
 			_registrations[type] = function():Object
 			{

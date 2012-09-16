@@ -64,5 +64,16 @@ package com.thedevstop.asfac
 			var result:Array = factory.resolve(Array);
 			assertSame(source, result);			
 		}
+		
+		public function test_should_allow_register_type_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.registerType(Dictionary, Dictionary, true);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertSame(result1, result2);
+		}
 	}
 }
