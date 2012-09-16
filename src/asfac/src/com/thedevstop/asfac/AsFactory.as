@@ -28,10 +28,22 @@ package com.thedevstop.asfac
 		
 		public function registerType(instanceType:Class, type:Class, asSingleton:Boolean=false):void 
 		{
-			_registrations[type] = function():Object
-			{
-				return resolveByClass(instanceType);
-			};
+			if (asSingleton)
+				_registrations[type] = (function(instanceType:Class):Function
+				{
+					var instance:Object = null;
+					return function():Object {
+						if (!instance)
+							instance = resolveByClass(instanceType);
+							
+						return instance;
+					};
+				})(instanceType);
+			else
+				_registrations[type] = function():Object
+				{
+					return resolveByClass(instanceType);
+				};
 		}
 		
 		public function resolve(type:Class):*
