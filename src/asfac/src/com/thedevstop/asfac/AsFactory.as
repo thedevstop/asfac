@@ -1,10 +1,10 @@
 package com.thedevstop.asfac
 {
-	import avmplus.getQualifiedClassName;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.describeType;
 	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	
 	/**
 	 * ...
@@ -59,8 +59,22 @@ package com.thedevstop.asfac
 		{
 			if (callback.length !== 0)
 				throw new IllegalOperationError("Callback function registered for {0} must not have arguments".replace("{0}", getQualifiedClassName(type)));
-				
-			_registrations[type] = callback;
+			
+			if (asSingleton)
+				_registrations[type] = (function(callback:Function):Function
+				{
+					var instance:Object = null;
+					
+					return function():Object
+					{
+						if (!instance)
+							instance = callback();
+						
+						return instance;
+					};
+				})(callback);
+			else
+				_registrations[type] = callback;
 		}
 		
 		private function resolveByClass(type:Class):*
