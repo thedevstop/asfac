@@ -10,13 +10,18 @@ package com.thedevstop.asfac
 	 * ...
 	 * @author
 	 */
-	public class AsFactory
+	public class AsFactory implements IRegister
 	{
 		private var _registrations:Dictionary;
 		
 		public function AsFactory()
 		{
 			_registrations = new Dictionary();
+		}
+		
+		public function register(instance:*):IRegisterAs
+		{
+			return new RegisterAs(this, instance);
 		}
 		
 		public function registerInstance(instance:Object, type:Class):void
