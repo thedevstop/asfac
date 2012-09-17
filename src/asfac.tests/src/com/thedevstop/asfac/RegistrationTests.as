@@ -99,5 +99,17 @@ package com.thedevstop.asfac
 			var result2:Object = factory.resolve(Dictionary);
 			assertSame(result1, result2);
 		}
+		
+		public function test_should_error_when_registering_type_is_null():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var registerFunc:Function = function():void
+			{
+				factory.registerType(Dictionary, null);
+			};
+			
+			assertThrows(IllegalOperationError, registerFunc);			
+		}
 	}
 }
