@@ -16,7 +16,7 @@ package com.thedevstop.asfac
 		
 		public function test_should_allow_register_concrete_instance():void
 		{
-			var factory:AsFactory = new AsFactory();
+			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var instance:Object = { foo:"bar" };
 			factory.register(instance).asType(Object);
@@ -27,7 +27,7 @@ package com.thedevstop.asfac
 		
 		public function test_should_allow_register_type():void
 		{
-			var factory:AsFactory = new AsFactory();
+			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			factory.register(Dictionary).asType(Dictionary);
 			
@@ -37,7 +37,7 @@ package com.thedevstop.asfac
 		
 		public function test_should_allow_register_callback():void
 		{
-			var factory:AsFactory = new AsFactory();
+			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var source:Array = [1, 2, 3];
 			factory.register(function():Array { return source; }).asType(Array);
@@ -48,7 +48,7 @@ package com.thedevstop.asfac
 		
 		public function test_should_error_when_registering_callback_with_arguments():void
 		{
-			var factory:AsFactory = new AsFactory();
+			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var registerFunc:Function = function():void
 			{
@@ -60,7 +60,7 @@ package com.thedevstop.asfac
 		
 		public function test_should_allow_register_callback_as_singleton():void
 		{
-			var factory:AsFactory = new AsFactory();
+			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).singleton();
 			
@@ -71,7 +71,7 @@ package com.thedevstop.asfac
 		
 		public function test_should_allow_register_type_as_singleton():void
 		{
-			var factory:AsFactory = new AsFactory();
+			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			factory.register(Dictionary).asType(Dictionary).singleton();
 			

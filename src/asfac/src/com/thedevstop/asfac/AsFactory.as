@@ -10,18 +10,13 @@ package com.thedevstop.asfac
 	 * ...
 	 * @author
 	 */
-	public class AsFactory implements IRegister
+	public class AsFactory
 	{
 		private var _registrations:Dictionary;
 		
 		public function AsFactory()
 		{
 			_registrations = new Dictionary();
-		}
-		
-		public function register(instance:*):IRegisterAs
-		{
-			return new RegisterAs(this, instance);
 		}
 		
 		public function registerInstance(instance:Object, type:Class):void
@@ -45,14 +40,6 @@ package com.thedevstop.asfac
 			};
 			
 			registerCallback(resolveType, type, asSingleton);
-		}
-		
-		public function resolve(type:Class):*
-		{			
-			if (_registrations[type] !== undefined)
-				return _registrations[type]();
-				
-			return resolveByClass(type);
 		}
 		
 		public function registerCallback(callback:Function, type:Class, asSingleton:Boolean=false):void 
@@ -81,6 +68,14 @@ package com.thedevstop.asfac
 				})(callback);
 			else
 				_registrations[type] = callback;
+		}
+		
+		public function resolve(type:Class):*
+		{
+			if (_registrations[type] !== undefined)
+				return _registrations[type]();
+				
+			return resolveByClass(type);
 		}
 		
 		private function resolveByClass(type:Class):*
