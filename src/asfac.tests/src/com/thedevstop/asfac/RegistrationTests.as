@@ -111,5 +111,17 @@ package com.thedevstop.asfac
 			
 			assertThrows(IllegalOperationError, registerFunc);			
 		}
+		
+		public function test_should_error_when_instance_type_is_null():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var registerFunc:Function = function():void
+			{
+				factory.registerType(null, Dictionary);
+			};
+			
+			assertThrows(IllegalOperationError, registerFunc);			
+		}
 	}
 }
