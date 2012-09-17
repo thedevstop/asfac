@@ -31,6 +31,9 @@ package com.thedevstop.asfac
 		
 		public function registerType(instanceType:Class, type:Class, asSingleton:Boolean=false):void 
 		{
+			if (!instanceType)
+				throw new IllegalOperationError("InstanceType cannot be null when registering a type");
+			
 			var resolveType:Function = function():Object
 			{
 				return resolveByClass(instanceType);
