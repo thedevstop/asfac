@@ -4,11 +4,25 @@ package com.thedevstop.asfac
 	 * ...
 	 * @author 
 	 */
-	public class FluentAsFactory extends AsFactory implements IRegister
+	public class FluentAsFactory
 	{
+		private var _factory:AsFactory;
+		private var _registrar:FluentRegistrar;
+		
+		public function FluentAsFactory()
+		{
+			_factory = new AsFactory();
+			_registrar = new FluentRegistrar(_factory);
+		}
+		
 		public function register(instance:*):IRegisterAs
 		{
-			return new RegisterAs(this, instance);
-		}	
+			return _registrar.register(instance);
+		}
+		
+		public function resolve(type:Class):*
+		{
+			return _factory.resolve(type);
+		}
 	}
 }
