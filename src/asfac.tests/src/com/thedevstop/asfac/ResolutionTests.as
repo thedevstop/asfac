@@ -57,7 +57,7 @@ package com.thedevstop.asfac
 			assertSame(instance, result.dictionary);
 		}
 		
-		public function test_should_fail_when_resolving_unregistered_interface():void
+		public function test_should_error_when_resolving_unregistered_interface():void
 		{
 			var factory:AsFactory = new AsFactory();
 			
@@ -67,6 +67,18 @@ package com.thedevstop.asfac
 			};
 			
 			assertThrows(IllegalOperationError, resolveFunc);
+		}
+		
+		public function test_should_error_when_resolving_type_is_null():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var resolveFunc:Function = function():void
+			{
+				factory.resolve(null);
+			};
+			
+			assertThrows(IllegalOperationError, resolveFunc);					
 		}
 	}
 }

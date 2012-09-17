@@ -43,7 +43,7 @@ package com.thedevstop.asfac
 		}
 		
 		public function resolve(type:Class):*
-		{
+		{			
 			if (_registrations[type] !== undefined)
 				return _registrations[type]();
 				
@@ -80,6 +80,9 @@ package com.thedevstop.asfac
 		
 		private function resolveByClass(type:Class):*
 		{
+			if (!type)
+				throw new IllegalOperationError("Type cannot be null when resolving.");
+			
 			var parameters:Array = [];
 			var description:XML = describeType(type);
 			var constructor:XMLList = description.factory.constructor;
