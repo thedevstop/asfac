@@ -49,6 +49,9 @@ package com.thedevstop.asfac
 		
 		public function registerCallback(callback:Function, type:Class, asSingleton:Boolean=false):void 
 		{
+			if (!type)
+				throw new IllegalOperationError("Type cannot be null when registering a callback");
+			
 			if (callback.length !== 0)
 				throw new IllegalOperationError("Callback function registered for {0} must not have arguments".replace("{0}", getQualifiedClassName(type)));
 			
