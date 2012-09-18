@@ -19,4 +19,5 @@ Register type for interface.
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
 **License**
+
 This content is released under the MIT License (See LICENSE.txt).
