@@ -7,18 +7,25 @@ package com.thedevstop.asfac
 	import flash.utils.getDefinitionByName;
 	
 	/**
-	 * ...
-	 * @author
+	 * The default AsFactory allows for registering instances, types, or callbacks
 	 */
 	public class AsFactory
 	{
 		private var _registrations:Dictionary;
 		
+		/**
+		 * Constructs a new AsFactory
+		 */
 		public function AsFactory()
 		{
 			_registrations = new Dictionary();
 		}
 		
+		/**
+		 * Registers a concrete instance to be returned whenever the target type is requested
+		 * @param	instance the concrete instance to be returned
+		 * @param	type the target type for which the instance should be returned at resolution time
+		 */
 		public function registerInstance(instance:Object, type:Class):void
 		{
 			var returnInstance:Function = function():Object
@@ -29,6 +36,13 @@ package com.thedevstop.asfac
 			registerCallback(returnInstance, type, false);
 		}
 		
+		/**
+		 * Registers a type to be returned whenever the target type is requested
+		 * @param	instanceType the type to construct at resolution time
+		 * @param	type the type being requested
+		 * @param	asSingleton If true, only one instance will be created and returned on each request. If false (default), a new instance
+		 * is created and returned at each resolution request
+		 */
 		public function registerType(instanceType:Class, type:Class, asSingleton:Boolean=false):void 
 		{
 			if (!instanceType)
@@ -42,6 +56,13 @@ package com.thedevstop.asfac
 			registerCallback(resolveType, type, asSingleton);
 		}
 		
+		/**
+		 * Registers a callback to be executed, the result of which is returned whenever the target type is requested
+		 * @param	callback the callback to execute
+		 * @param	type the type being requested
+		 * @param	asSingleton If true, only one instance will be created and returned on each request. If false (default), a new instance
+		 * is created and returned at each resolution request
+		 */
 		public function registerCallback(callback:Function, type:Class, asSingleton:Boolean=false):void 
 		{
 			if (!type)
@@ -70,6 +91,11 @@ package com.thedevstop.asfac
 				_registrations[type] = callback;
 		}
 		
+		/**
+		 * Returns an instance for the target type, using prior registrations to fufill constructor parameters
+		 * @param	type the type being requested
+		 * @return resolved instance
+		 */
 		public function resolve(type:Class):*
 		{
 			if (_registrations[type] !== undefined)
@@ -78,6 +104,11 @@ package com.thedevstop.asfac
 			return resolveByClass(type);
 		}
 		
+		/**
+		 * Resolves the desired type using prior registrations
+		 * @param	type the type being requested
+		 * @return the resolved instance
+		 */
 		private function resolveByClass(type:Class):*
 		{
 			if (!type)
@@ -101,6 +132,12 @@ package com.thedevstop.asfac
 			return createObject(type, parameters);
 		}
 		
+		/**
+		 * Creates a new instance of the type, using the specified parameters as the constructor parameters
+		 * @param	type the type being created
+		 * @param	parameters the parameters to supply to the constructor
+		 * @return new instance of type
+		 */
 		private function createObject(type:Class, parameters:Array):*
 		{
 			switch (parameters.length)
