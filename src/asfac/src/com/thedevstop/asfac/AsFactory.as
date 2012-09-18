@@ -12,6 +12,7 @@ package com.thedevstop.asfac
 	public class AsFactory
 	{
 		private var _registrations:Dictionary;
+		private var _descriptions:Dictionary;
 		
 		/**
 		 * Constructs a new AsFactory
@@ -19,6 +20,7 @@ package com.thedevstop.asfac
 		public function AsFactory()
 		{
 			_registrations = new Dictionary();
+			_descriptions = new Dictionary();
 		}
 		
 		/**
@@ -115,7 +117,13 @@ package com.thedevstop.asfac
 				throw new IllegalOperationError("Type cannot be null when resolving.");
 			
 			var parameters:Array = [];
-			var description:XML = describeType(type);
+			var description:XML;
+			
+			if (_descriptions[type] !== undefined)
+				description = _descriptions[type];
+			else
+				description = _descriptions[type] = describeType(type);
+			
 			var constructor:XMLList = description.factory.constructor;
 			
 			if (constructor.length() === 0)
