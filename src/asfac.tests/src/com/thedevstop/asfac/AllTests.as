@@ -16,6 +16,7 @@ package com.thedevstop.asfac
 			addTest(new RegistrationTests());
 			addTest(new ResolutionTests());
 			addTest(new FluentRegistrationTests());
+			addTest(new PerformanceTests());
 		}
 	}
 }
