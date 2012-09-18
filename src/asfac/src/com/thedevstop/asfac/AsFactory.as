@@ -42,14 +42,6 @@ package com.thedevstop.asfac
 			registerCallback(resolveType, type, asSingleton);
 		}
 		
-		public function resolve(type:Class):*
-		{			
-			if (_registrations[type] !== undefined)
-				return _registrations[type]();
-				
-			return resolveByClass(type);
-		}
-		
 		public function registerCallback(callback:Function, type:Class, asSingleton:Boolean=false):void 
 		{
 			if (!type)
@@ -76,6 +68,14 @@ package com.thedevstop.asfac
 				})(callback);
 			else
 				_registrations[type] = callback;
+		}
+		
+		public function resolve(type:Class):*
+		{
+			if (_registrations[type] !== undefined)
+				return _registrations[type]();
+				
+			return resolveByClass(type);
 		}
 		
 		private function resolveByClass(type:Class):*
