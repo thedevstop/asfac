@@ -62,8 +62,8 @@ package com.thedevstop.asfac
 		 * Registers a callback to be executed, the result of which is returned whenever the target type is requested
 		 * @param	callback the callback to execute
 		 * @param	type the type being requested
-		 * @param	asSingleton If true, only one instance will be created and returned on each request. If false (default), a new instance
-		 * is created and returned at each resolution request
+		 * @param	asSingleton If true, callback is only invoked once and the result is returned on each request. If false (default), 
+		 * callback is invoked on each resolution request
 		 */
 		public function registerCallback(callback:Function, type:Class, asSingleton:Boolean=false):void 
 		{
@@ -94,7 +94,7 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Returns an instance for the target type, using prior registrations to fufill constructor parameters
+		 * Returns an instance for the target type, using prior registrations to fulfill constructor parameters
 		 * @param	type the type being requested
 		 * @return resolved instance
 		 */
