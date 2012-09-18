@@ -62,7 +62,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).singleton();
+			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).asSingleton();
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -73,7 +73,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(Dictionary).asType(Dictionary).singleton();
+			factory.register(Dictionary).asType(Dictionary).asSingleton();
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);

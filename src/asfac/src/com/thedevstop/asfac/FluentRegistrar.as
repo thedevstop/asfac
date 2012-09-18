@@ -36,7 +36,7 @@ package com.thedevstop.asfac
 			return this;
 		}
 		
-		public function singleton():void
+		public function asSingleton():void
 		{
 			if (_instance is Class)
 				_factory.registerType(_instance, _type, true);

@@ -6,6 +6,6 @@ package com.thedevstop.asfac
 	 */
 	public interface IRegisterAsSingleton 
 	{
-		function singleton():void
+		function asSingleton():void
 	}
 }
