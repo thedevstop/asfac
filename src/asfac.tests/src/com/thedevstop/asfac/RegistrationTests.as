@@ -111,6 +111,28 @@ package com.thedevstop.asfac
 			assertNotSame(result1, result2);
 		}
 		
+		public function test_callbacks_should_allow_register_type_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, true);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertSame(result1, result2);
+		}
+		
+		public function test_callbacks_should_retun_new_instances_when_not_registered_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, false);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertNotSame(result1, result2);
+		}
+		
 		public function test_should_error_when_registering_type_is_null():void
 		{
 			var factory:AsFactory = new AsFactory();
