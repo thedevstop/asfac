@@ -70,11 +70,7 @@ package com.thedevstop.asfac
 			if (!type)
 				throw new IllegalOperationError("Type cannot be null when registering a callback");
 				
-			if (callback == null)
-				throw new IllegalOperationError("Callback cannot be null when registering a type");
-			
-			if (!isValid(callback))
-				throw new IllegalOperationError("Callback function registered for {0} must have no arguments or a single AsFactory argument".replace("{0}", getQualifiedClassName(type)));
+			validateCallback(callback);
 			
 			if (asSingleton)
 				_registrations[type] = (function(callback:Function):Function
@@ -174,10 +170,14 @@ package com.thedevstop.asfac
 		 * Confirms that a callback is valid for registration. Currently the callback must accept no arguments, or a single AsFactory argument
 		 * @param	callback the callback being tested
 		 */
-		private function isValid(callback:Function):Boolean 
+		private function validateCallback(callback:Function):void
 		{
+			if (callback == null)
+				throw new IllegalOperationError("Callback cannot be null when registering a type");
+			
 			// TODO: How to check type?
-			return callback.length < 2;
+			if (callback.length > 1)
+				throw new IllegalOperationError("Callback function must have no arguments or a single AsFactory argument");
 		}
 	}
 }
