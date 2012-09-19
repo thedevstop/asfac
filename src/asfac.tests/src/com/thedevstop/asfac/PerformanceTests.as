@@ -1,6 +1,7 @@
 package com.thedevstop.asfac 
 {
 	import asunit.framework.TestCase;
+	import com.thedevstop.asfac.stubs.DictionarySingleton;
 	import flash.utils.Dictionary;
 	/**
 	 * ...
@@ -14,41 +15,77 @@ package com.thedevstop.asfac
 			super(testMethod);
 		}
 		
-		public function test_should_resolve_ten_thousand_types_in_100ms():void
+		public function test_should_resolve_types_within_tolerance_of_manual_resolution_duration():void
 		{
+			const NumberOfResolutions:Number = 100000;
+			// TODO: Pull the competition and adjust this target accordingly
+			const AllowableTolerance:Number = 20.00;
+			
 			var factory:AsFactory = new AsFactory();
+			var resolutions:Number = 0;
+			var instance:Dictionary;
 			
-			var resolutions:int = 0;
-			var startTime:Number = new Date().getTime();
+			var manualStartTime:Number = new Date().getTime();
 			
-			while (resolutions < 10000)
+			while(resolutions < NumberOfResolutions)
 			{
-				var dictionary:Dictionary = factory.resolve(Dictionary);
+				instance = new Dictionary();
 				resolutions++;
 			}
 			
-			var duration:Number = new Date().getTime() - startTime;
+			var manualDuration:Number = new Date().getTime() - manualStartTime;
 			
-			assertTrue(duration < 100);
+			resolutions = 0;
+			var asFacStartTime:Number = new Date().getTime();
+			
+			while(resolutions < NumberOfResolutions)
+			{
+				instance = factory.resolve(Dictionary);
+				resolutions++;
+			}
+			
+			var asFacDuration:Number = new Date().getTime() - asFacStartTime;
+			
+			var toleratedDuration:Number = manualDuration * AllowableTolerance;
+			assertTrue(asFacDuration < toleratedDuration);
 		}
 		
-		public function test_should_resolve_one_hundred_thousand_singleton_types_in_100ms():void
+		public function test_should_resolve_singletons_within_tolerance_of_manual_resolution_duration():void
 		{
+			const NumberOfResolutions:Number = 100000;
+			// TODO: Pull the competition and adjust this target accordingly
+			const AllowableTolerance:Number = 2.5;
+			
 			var factory:AsFactory = new AsFactory();
 			factory.registerType(Dictionary, Dictionary, true);
 			
-			var resolutions:int = 0;
-			var startTime:Number = new Date().getTime();
+			var resolutions:Number = 0;
+			var instance:Dictionary;
 			
-			while (resolutions < 100000)
+			var manualStartTime:Number = new Date().getTime();
+			
+			while(resolutions < NumberOfResolutions)
 			{
-				var dictionary:Dictionary = factory.resolve(Dictionary);
+				instance = DictionarySingleton.instance;
 				resolutions++;
 			}
 			
-			var duration:Number = new Date().getTime() - startTime;
+			var manualDuration:Number = new Date().getTime() - manualStartTime;
 			
-			assertTrue(duration < 100);
+			resolutions = 0;
+			var asFacStartTime:Number = new Date().getTime();
+			
+			while(resolutions < NumberOfResolutions)
+			{
+				instance = factory.resolve(Dictionary);
+				resolutions++;
+			}
+			
+			var asFacDuration:Number = new Date().getTime() - asFacStartTime;
+			
+			var toleratedDuration:Number = manualDuration * AllowableTolerance;
+			var whatWouldHaveBeenOk:Number = asFacDuration / manualDuration;
+			assertTrue(asFacDuration < toleratedDuration);
 		}
 		
 	}
