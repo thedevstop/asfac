@@ -112,28 +112,16 @@ package com.thedevstop.asfac
 			if (!type)
 				throw new IllegalOperationError("Type cannot be null when resolving.");
 			
-			var parameters:Array = [];
-			var description:XML;
+			var description:XML = getTypeDescription(type);
 			
-			if (_descriptions[type] !== undefined)
-				description = _descriptions[type];
-			else
-				description = _descriptions[type] = describeType(type);
-			
-			var constructor:XMLList = description.factory.constructor;
-			
-			if (constructor.length() === 0)
+			if (description.factory.extendsClass.length() === 0)
 				throw new IllegalOperationError("Interface {0} must be registered before it can be resolved.".replace("{0}", description.@name.toString()));
 			
-			for each (var parameter:XML in constructor.parameter)
-			{
-				if (parameter.@optional.toString() != "false")
-					break;
-				
-				var parameterType:Class = Class(getDefinitionByName(parameter.@type.toString()));
-				parameters.push(resolve(parameterType));
-			}
-			return createObject(type, parameters);
+			var parameters:Array = resolveConstructorParameters(description.factory.constructor);
+			var instance:Object = createObject(type, parameters);
+			injectProperties(instance, description.factory);
+			
+			return instance;
 		}
 		
 		/**
@@ -178,6 +166,77 @@ package com.thedevstop.asfac
 			// TODO: How to check type?
 			if (callback.length > 1)
 				throw new IllegalOperationError("Callback function must have no arguments or a single AsFactory argument");
+		}
+		
+		/**
+		 * Gets the class description for the type
+		 * @param	type The class to be described
+		 * @return An XML of the properties and methods for the class
+		 */
+		private function getTypeDescription(type:Class):XML
+		{
+			if (_descriptions[type] !== undefined)
+				return _descriptions[type];
+			
+			return _descriptions[type] = describeType(type);
+		}
+		
+		/**
+		 * Resolves the non-optional parameters for a constructor
+		 * @param	constructor The constructor node from a class description xml
+		 * @return An array of objects to use as constructor arguments
+		 */
+		private function resolveConstructorParameters(constructor:XMLList):Array
+		{
+			var parameters:Array = [];
+			
+			for each (var parameter:XML in constructor.parameter)
+			{
+				if (parameter.@optional.toString() != "false")
+					break;
+				
+				var parameterType:Class = Class(getDefinitionByName(parameter.@type.toString()));
+				parameters.push(resolve(parameterType));
+			}
+			
+			return parameters;
+		}
+		
+		/**
+		 * Resolves the properties on the instance object that are marked 'Inject'
+		 * @param	instance The object to be inspected
+		 * @param	factory The factory node from a class description xml
+		 */
+		private function injectProperties(instance:Object, factory:XMLList):void
+		{
+			for each (var accessor:XML in factory.accessor)
+			{
+				if (shouldInjectAccessor(accessor))
+				{
+					var propertyType:Class = Class(getDefinitionByName(accessor.@type.toString()));
+					instance[accessor.@name.toString()] = resolve(propertyType);
+				}
+			}
+		}
+		
+		/**
+		 * Determines whether the accessor should be injected 
+		 * @param	accessor An accessor node from a class description xml
+		 * @return true is the Inject metadata is present, otherwise false
+		 */
+		private function shouldInjectAccessor(accessor:XML):Boolean
+		{				
+			if (accessor.@access == "readwrite" ||
+				accessor.@access == "write")
+			{
+				for each (var metadata:XML in accessor.metadata)
+				{
+					if (metadata.@name.toString() == "Inject")
+						return true;
+				}
+			}
+			
+			return false;
 		}
 	}
 }

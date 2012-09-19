@@ -18,6 +18,7 @@ package com.thedevstop.asfac.stubs
 			return _theObject;
 		}
 		
+		[Inject]
 		public function set theObject(rhs:Object):void
 		{
 			_theObject = rhs;

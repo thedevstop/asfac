@@ -2,6 +2,7 @@ package com.thedevstop.asfac
 {
 	import asunit.framework.TestCase;
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
+	import com.thedevstop.asfac.stubs.HasObjectProperty;
 	import com.thedevstop.asfac.stubs.IPoint;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
@@ -79,6 +80,18 @@ package com.thedevstop.asfac
 			};
 			
 			assertThrows(IllegalOperationError, resolveFunc);					
+		}
+		
+		public function test_should_resolve_properties_marked_with_inject_metadata():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var obj:Object = { numbers:[1, 2, 3] };
+			factory.registerInstance(obj, Object);
+			
+			var propertyObject:HasObjectProperty = factory.resolve(HasObjectProperty);
+			
+			assertSame(obj, propertyObject.theObject);					
 		}
 	}
 }
