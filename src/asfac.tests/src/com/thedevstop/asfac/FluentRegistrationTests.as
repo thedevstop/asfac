@@ -1,6 +1,7 @@
 package com.thedevstop.asfac 
 {
 	import asunit.framework.TestCase;
+	import com.thedevstop.asfac.stubs.HasObjectProperty;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
 	/**
@@ -46,13 +47,13 @@ package com.thedevstop.asfac
 			assertSame(source, result);			
 		}
 		
-		public function test_should_error_when_registering_callback_with_arguments():void
+		public function test_should_error_when_registering_callback_with_too_many_arguments():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var registerFunc:Function = function():void
 			{
-				factory.register(function(name:String):Array { return [1, 2, 3]; }).asType(Array);
+				factory.register(function(asFactory:AsFactory, name:String):Array { return [1, 2, 3]; }).asType(Array);
 			};
 			
 			assertThrows(IllegalOperationError, registerFunc);
@@ -123,6 +124,24 @@ package com.thedevstop.asfac
 			};
 			
 			assertThrows(IllegalOperationError, registerFunc);			
+		}
+		
+		public function test_registered_callbacks_can_accept_factory_as_parameter():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			
+			var foo:Object = { bar:"baz" };
+			factory.register(foo).asType(Object);
+			
+			factory.register(function (asFactory:AsFactory):HasObjectProperty
+			{
+				var result:HasObjectProperty = new HasObjectProperty();
+				result.theObject = factory.resolve(Object);
+				return result;
+			}).asType(HasObjectProperty);
+			
+			var instance:HasObjectProperty = factory.resolve(HasObjectProperty);
+			assertSame(foo, instance.theObject);
 		}
 	}
 }

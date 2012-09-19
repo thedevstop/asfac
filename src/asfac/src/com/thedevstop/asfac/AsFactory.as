@@ -73,8 +73,8 @@ package com.thedevstop.asfac
 			if (callback == null)
 				throw new IllegalOperationError("Callback cannot be null when registering a type");
 			
-			if (callback.length !== 0)
-				throw new IllegalOperationError("Callback function registered for {0} must not have arguments".replace("{0}", getQualifiedClassName(type)));
+			if (!isValid(callback))
+				throw new IllegalOperationError("Callback function registered for {0} must have no arguments or a single AsFactory argument".replace("{0}", getQualifiedClassName(type)));
 			
 			if (asSingleton)
 				_registrations[type] = (function(callback:Function):Function
@@ -84,7 +84,7 @@ package com.thedevstop.asfac
 					return function():Object
 					{
 						if (!instance)
-							instance = callback();
+							instance = callback(this);
 						
 						return instance;
 					};
@@ -101,7 +101,7 @@ package com.thedevstop.asfac
 		public function resolve(type:Class):*
 		{
 			if (_registrations[type] !== undefined)
-				return _registrations[type]();
+				return _registrations[type](this);
 				
 			return resolveByClass(type);
 		}
@@ -168,6 +168,16 @@ package com.thedevstop.asfac
 				case 15 : return new type(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], parameters[8], parameters[9], parameters[10], parameters[11], parameters[12], parameters[13], parameters[14]);
 				default : throw new Error("Too many constructor parameters for createObject");
 			}
+		}
+		
+		/**
+		 * Confirms that a callback is valid for registration. Currently the callback must accept no arguments, or a single AsFactory argument
+		 * @param	callback the callback being tested
+		 */
+		private function isValid(callback:Function):Boolean 
+		{
+			// TODO: How to check type?
+			return callback.length < 2;
 		}
 	}
 }
