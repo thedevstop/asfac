@@ -19,7 +19,7 @@ package com.thedevstop.asfac
 		{
 			const NumberOfResolutions:Number = 100000;
 			// TODO: Pull the competition and adjust this target accordingly
-			const AllowableTolerance:Number = 20.00;
+			const AllowableTolerance:Number = 5.00;
 			
 			var factory:AsFactory = new AsFactory();
 			var resolutions:Number = 0;
@@ -47,6 +47,7 @@ package com.thedevstop.asfac
 			var asFacDuration:Number = new Date().getTime() - asFacStartTime;
 			
 			var toleratedDuration:Number = manualDuration * AllowableTolerance;
+			var whatWouldHaveBeenOk:Number = asFacDuration / manualDuration;
 			assertTrue(asFacDuration < toleratedDuration);
 		}
 		
