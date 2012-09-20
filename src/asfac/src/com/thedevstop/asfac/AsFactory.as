@@ -258,9 +258,7 @@ package com.thedevstop.asfac
 		private function injectProperties(instance:Object, typeDescription:Object):void
 		{
 			for each (var injectableProperty:Object in typeDescription.injectableProperties)
-			{
 				instance[injectableProperty.name] = resolve(injectableProperty.type);
-			}
 		}
 	}
 }
