@@ -112,28 +112,16 @@ package com.thedevstop.asfac
 			if (!type)
 				throw new IllegalOperationError("Type cannot be null when resolving.");
 			
-			var parameters:Array = [];
-			var description:XML;
+			var typeDescription:Object = getTypeDescription(type);
 			
-			if (_descriptions[type] !== undefined)
-				description = _descriptions[type];
-			else
-				description = _descriptions[type] = describeType(type);
+			if (!typeDescription)
+				throw new IllegalOperationError("Interface must be registered before it can be resolved.");
 			
-			var constructor:XMLList = description.factory.constructor;
+			var parameters:Array = resolveConstructorParameters(typeDescription);
+			var instance:Object = createObject(type, parameters);
+			injectProperties(instance, typeDescription);
 			
-			if (constructor.length() === 0)
-				throw new IllegalOperationError("Interface {0} must be registered before it can be resolved.".replace("{0}", description.@name.toString()));
-			
-			for each (var parameter:XML in constructor.parameter)
-			{
-				if (parameter.@optional.toString() != "false")
-					break;
-				
-				var parameterType:Class = Class(getDefinitionByName(parameter.@type.toString()));
-				parameters.push(resolve(parameterType));
-			}
-			return createObject(type, parameters);
+			return instance;
 		}
 		
 		/**
@@ -178,6 +166,99 @@ package com.thedevstop.asfac
 			// TODO: How to check type?
 			if (callback.length > 1)
 				throw new IllegalOperationError("Callback function must have no arguments or a single AsFactory argument");
+		}
+		
+		/**
+		 * Gets the class description for the type
+		 * @param	type The class to be described
+		 * @return An object of constructor types and injectable properties
+		 */
+		private function getTypeDescription(type:Class):Object
+		{
+			if (_descriptions[type] !== undefined)
+				return _descriptions[type];
+			
+			return _descriptions[type] = buildTypeDescription(type);
+		}
+		
+		/**
+		 * Builds an optimized description of the type.
+		 * @param	type The type to be described.
+		 * @return An optimized description of the constructor and injectable properties
+		 */
+		private function buildTypeDescription(type:Class):Object
+		{
+			var typeDescription:Object = { constructorTypes:[], injectableProperties:[] };
+			var description:XML = describeType(type);
+			
+			if (description.factory.extendsClass.length() === 0)
+				return null;
+				
+			for each (var parameter:XML in description.factory.constructor.parameter)
+			{
+				if (parameter.@optional.toString() != "false")
+					break;
+				
+				var parameterType:Class = Class(getDefinitionByName(parameter.@type.toString()));
+				typeDescription.constructorTypes.push(parameterType);
+			}
+			
+			for each (var accessor:XML in description.factory.accessor)
+			{
+				if (shouldInjectAccessor(accessor))
+				{
+					var propertyType:Class = Class(getDefinitionByName(accessor.@type.toString()));
+					typeDescription.injectableProperties.push( { name:accessor.@name.toString(), type:propertyType } ); 
+				}
+			}
+			
+			return typeDescription;
+		}
+		
+		/**
+		 * Determines whether the accessor should be injected 
+		 * @param	accessor An accessor node from a class description xml
+		 * @return true is the Inject metadata is present, otherwise false
+		 */
+		private function shouldInjectAccessor(accessor:XML):Boolean
+		{				
+			if (accessor.@access == "readwrite" ||
+				accessor.@access == "write")
+			{
+				for each (var metadata:XML in accessor.metadata)
+				{
+					if (metadata.@name.toString() == "Inject")
+						return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		/**
+		 * Resolves the non-optional parameters for a constructor
+		 * @param	typeDescription The optimized description of the type
+		 * @return An array of objects to use as constructor arguments
+		 */
+		private function resolveConstructorParameters(typeDescription:Object):Array
+		{
+			var parameters:Array = [];
+			
+			for each (var parameterType:Class in typeDescription.constructorTypes)
+				parameters.push(resolve(parameterType));
+			
+			return parameters;
+		}
+		
+		/**
+		 * Resolves the properties on the instance object that are marked 'Inject'
+		 * @param	instance The object to be inspected
+		 * @param	typeDescription The optimized description of the type
+		 */
+		private function injectProperties(instance:Object, typeDescription:Object):void
+		{
+			for each (var injectableProperty:Object in typeDescription.injectableProperties)
+				instance[injectableProperty.name] = resolve(injectableProperty.type);
 		}
 	}
 }
