@@ -1,12 +1,13 @@
 package com.thedevstop.asfac 
 {
+	
 	/**
 	 * ...
 	 * @author 
 	 */
-	public interface IRegisterAsSingleton
+	public interface IRegisterCommit 
 	{
-		function asSingleton():IRegisterCommit
 		function commit():void;
 	}
+	
 }

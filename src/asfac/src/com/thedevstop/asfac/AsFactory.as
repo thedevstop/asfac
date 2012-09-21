@@ -48,7 +48,7 @@ package com.thedevstop.asfac
 		 * @param	asSingleton If true, only one instance will be created and returned on each request. If false (default), a new instance
 		 * is created and returned at each resolution request
 		 */
-		public function registerType(instanceType:Class, type:Class, asSingleton:Boolean=false):void 
+		public function registerType(instanceType:Class, type:Class, scopeName:String=DefaultScopeName, asSingleton:Boolean=false):void 
 		{
 			if (!instanceType)
 				throw new IllegalOperationError("InstanceType cannot be null when registering a type");
@@ -58,7 +58,7 @@ package com.thedevstop.asfac
 				return resolveByClass(instanceType);
 			};
 			
-			registerCallback(resolveType, type, DefaultScopeName, asSingleton);
+			registerCallback(resolveType, type, scopeName, asSingleton);
 		}
 		
 		/**

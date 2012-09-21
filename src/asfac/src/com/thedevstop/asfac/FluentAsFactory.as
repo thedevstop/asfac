@@ -15,7 +15,7 @@ package com.thedevstop.asfac
 			_registrar = new FluentRegistrar(_factory);
 		}
 		
-		public function register(instance:*):IRegisterAs
+		public function register(instance:*):IRegisterAsType
 		{
 			return _registrar.register(instance);
 		}

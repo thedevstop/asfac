@@ -94,7 +94,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerType(Dictionary, Dictionary, true);
+			factory.registerType(Dictionary, Dictionary, AsFactory.DefaultScopeName, true);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -105,7 +105,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerType(Dictionary, Dictionary, false);
+			factory.registerType(Dictionary, Dictionary, AsFactory.DefaultScopeName, false);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);

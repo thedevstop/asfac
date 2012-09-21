@@ -6,6 +6,6 @@ package com.thedevstop.asfac
 	 */
 	public interface IRegister 
 	{
-		function register(instance:*):IRegisterAs
+		function register(instance:*):IRegisterAsType
 	}
 }
