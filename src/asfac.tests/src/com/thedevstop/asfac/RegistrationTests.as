@@ -83,7 +83,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, true);
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, true);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -116,7 +116,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, true);
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, true);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -127,7 +127,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, false);
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, false);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);

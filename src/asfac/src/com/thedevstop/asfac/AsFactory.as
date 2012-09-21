@@ -11,6 +11,8 @@ package com.thedevstop.asfac
 	 */
 	public class AsFactory
 	{
+		static public const DefaultScopeName:String = "";
+		
 		private var _registrations:Dictionary;
 		private var _descriptions:Dictionary;
 		
@@ -27,15 +29,16 @@ package com.thedevstop.asfac
 		 * Registers a concrete instance to be returned whenever the target type is requested
 		 * @param	instance the concrete instance to be returned
 		 * @param	type the target type for which the instance should be returned at resolution time
+		 * @param scopeName the named scope for the registration
 		 */
-		public function registerInstance(instance:Object, type:Class):void
+		public function registerInstance(instance:Object, type:Class, scopeName:String = DefaultScopeName):void
 		{
 			var returnInstance:Function = function():Object
 			{
 				return instance;
 			};
 			
-			registerCallback(returnInstance, type, false);
+			registerCallback(returnInstance, type, scopeName, false);
 		}
 		
 		/**
@@ -55,7 +58,7 @@ package com.thedevstop.asfac
 				return resolveByClass(instanceType);
 			};
 			
-			registerCallback(resolveType, type, asSingleton);
+			registerCallback(resolveType, type, DefaultScopeName, asSingleton);
 		}
 		
 		/**
@@ -65,15 +68,21 @@ package com.thedevstop.asfac
 		 * @param	asSingleton If true, callback is only invoked once and the result is returned on each request. If false (default), 
 		 * callback is invoked on each resolution request
 		 */
-		public function registerCallback(callback:Function, type:Class, asSingleton:Boolean=false):void 
+		public function registerCallback(callback:Function, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void 
 		{
 			if (!type)
 				throw new IllegalOperationError("Type cannot be null when registering a callback");
 				
 			validateCallback(callback);
+
+			var registrationsByScope:Dictionary = _registrations[type];
+			if (!registrationsByScope)
+			{
+				registrationsByScope = _registrations[type] = new Dictionary();
+			}
 			
 			if (asSingleton)
-				_registrations[type] = (function(callback:Function):Function
+				registrationsByScope[scopeName] = (function(callback:Function):Function
 				{
 					var instance:Object = null;
 					
@@ -86,7 +95,8 @@ package com.thedevstop.asfac
 					};
 				})(callback);
 			else
-				_registrations[type] = callback;
+				registrationsByScope[scopeName] = callback;
+				
 		}
 		
 		/**
@@ -94,11 +104,16 @@ package com.thedevstop.asfac
 		 * @param	type the type being requested
 		 * @return resolved instance
 		 */
-		public function resolve(type:Class):*
+		public function resolve(type:Class, scopeName:String = DefaultScopeName):*
 		{
-			if (_registrations[type] !== undefined)
-				return _registrations[type](this);
-				
+			var registrationsByScope:Dictionary = _registrations[type];
+			
+			if (registrationsByScope)
+			{
+				if (registrationsByScope[scopeName])
+					return registrationsByScope[scopeName](this);
+			}
+			
 			return resolveByClass(type);
 		}
 		
@@ -191,7 +206,8 @@ package com.thedevstop.asfac
 			var typeDescription:Object = { constructorTypes:[], injectableProperties:[] };
 			var description:XML = describeType(type);
 			
-			if (description.factory.extendsClass.length() === 0)
+			// Object does not extend class
+			if (description.factory.extendsClass.length() === 0 && type !== Object)
 				return null;
 				
 			for each (var parameter:XML in description.factory.constructor.parameter)

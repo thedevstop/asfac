@@ -41,7 +41,7 @@ package com.thedevstop.asfac
 			if (_instance is Class)
 				_factory.registerType(_instance, _type, true);
 			else if (_instance is Function)
-				_factory.registerCallback(_instance, _type, true);
+				_factory.registerCallback(_instance, _type, AsFactory.DefaultScopeName, true);
 		}
 	}
 }
