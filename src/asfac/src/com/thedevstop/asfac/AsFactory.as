@@ -74,7 +74,7 @@ package com.thedevstop.asfac
 				throw new IllegalOperationError("Type cannot be null when registering a callback");
 				
 			validateCallback(callback);
-	
+			
 			var registrationsByScope:Dictionary = _registrations[type];
 			if (!registrationsByScope)
 			{
@@ -82,21 +82,20 @@ package com.thedevstop.asfac
 			}
 			
 			if (asSingleton)
-				registrationsByScope[scopeName] = (function(callback:Function):Function
+				registrationsByScope[scopeName] = (function(callback:Function, scopeName:String):Function
 				{
 					var instance:Object = null;
 					
 					return function():Object
 					{
 						if (!instance)
-							instance = callback(this);
+							instance = callback(this, scopeName);
 						
 						return instance;
 					};
-				})(callback);
+				})(callback, scopeName);
 			else
 				registrationsByScope[scopeName] = callback;
-				
 		}
 		
 		/**
@@ -111,7 +110,7 @@ package com.thedevstop.asfac
 			if (registrationsByScope)
 			{
 				if (registrationsByScope[scopeName])
-					return registrationsByScope[scopeName](this);
+					return registrationsByScope[scopeName](this, scopeName);
 				else if (scopeName != DefaultScopeName)
 					throw new ArgumentError("Type being resolved has not been registered for scope named " + scopeName);
 			}
@@ -181,8 +180,8 @@ package com.thedevstop.asfac
 				throw new IllegalOperationError("Callback cannot be null when registering a type");
 			
 			// TODO: How to check type?
-			if (callback.length > 1)
-				throw new IllegalOperationError("Callback function must have no arguments or a single AsFactory argument");
+			if (callback.length != 0 && callback.length != 2)
+				throw new IllegalOperationError("Callback function must accept 0 or 2 arguments. The first is AsFactory and the second is scope name.");
 		}
 		
 		/**

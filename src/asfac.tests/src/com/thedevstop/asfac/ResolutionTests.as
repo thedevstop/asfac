@@ -145,6 +145,22 @@ package com.thedevstop.asfac
 			assertThrows(ArgumentError, resolveFunction);
 		}
 		
+		public function test_should_pass_factory_into_callback_during_resolution():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var scope:String = "nonDefaultScope";
+			
+			var resolveFunction:Function = function (asFactory:AsFactory, scopeName:String):Object 
+			{
+				assertSame(factory, asFactory);
+				return new Dictionary();
+			};
+			factory.registerCallback(resolveFunction, Dictionary, scope);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);		
+		}
+		
 		public function test_should_pass_scope_name_into_callback_during_resolution():void
 		{
 			var factory:AsFactory = new AsFactory();
