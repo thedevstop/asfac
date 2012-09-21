@@ -74,7 +74,7 @@ package com.thedevstop.asfac
 				throw new IllegalOperationError("Type cannot be null when registering a callback");
 				
 			validateCallback(callback);
-
+	
 			var registrationsByScope:Dictionary = _registrations[type];
 			if (!registrationsByScope)
 			{
@@ -112,6 +112,8 @@ package com.thedevstop.asfac
 			{
 				if (registrationsByScope[scopeName])
 					return registrationsByScope[scopeName](this);
+				else if (scopeName != DefaultScopeName)
+					throw new ArgumentError("Type being resolved has not been registered for scope named " + scopeName);
 			}
 			
 			return resolveByClass(type);
