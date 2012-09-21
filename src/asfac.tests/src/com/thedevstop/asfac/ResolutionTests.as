@@ -105,5 +105,16 @@ package com.thedevstop.asfac
 			assertNotNull(instance);
 			assertNotSame(instance, obj);
 		}
+		
+		public function test_should_resolve_type_with_specified_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var obj:Object = { numbers:[1, 2, 3] };
+			factory.registerInstance(obj, Object, "nonDefaultScope");
+			
+			var instance:Object = factory.resolve(Object, "nonDefaultScope");
+			assertSame(instance, obj);
+		}
 	}
 }
