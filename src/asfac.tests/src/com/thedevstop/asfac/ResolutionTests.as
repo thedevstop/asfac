@@ -1,9 +1,11 @@
 package com.thedevstop.asfac 
 {
+	import adobe.utils.CustomActions;
 	import asunit.framework.TestCase;
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
 	import com.thedevstop.asfac.stubs.HasObjectProperty;
 	import com.thedevstop.asfac.stubs.IPoint;
+	import flash.display.AVM1Movie;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
 	
@@ -126,6 +128,21 @@ package com.thedevstop.asfac
 			
 			var instance:Object = factory.resolve(Object);
 			assertSame(instance, obj);
+		}
+		
+		public function test_should_throw_error_when_resolving_with_scope_that_is_not_registered():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var obj:Object = { numbers:[1, 2, 3] };
+			factory.registerInstance(obj, Object);
+			
+			var resolveFunction:Function =function ():void 
+			{
+				var instance:Object = factory.resolve(Object, "nonDefaultScope");
+			};
+			
+			assertThrows(ArgumentError, resolveFunction);
 		}
 	}
 }
