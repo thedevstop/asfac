@@ -137,12 +137,28 @@ package com.thedevstop.asfac
 			var obj:Object = { numbers:[1, 2, 3] };
 			factory.registerInstance(obj, Object);
 			
-			var resolveFunction:Function =function ():void 
+			var resolveFunction:Function = function ():void 
 			{
 				var instance:Object = factory.resolve(Object, "nonDefaultScope");
 			};
 			
 			assertThrows(ArgumentError, resolveFunction);
+		}
+		
+		public function test_should_pass_scope_name_into_callback_during_resolution():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var scope:String = "nonDefaultScope";
+			
+			var resolveFunction:Function = function (factory:AsFactory, scopeName:String):Object 
+			{
+				assertEquals(scopeName, scope);
+				return new Dictionary();
+			};
+			factory.registerCallback(resolveFunction, Dictionary, scope);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);		
 		}
 	}
 }
