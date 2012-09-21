@@ -22,29 +22,18 @@ package com.thedevstop.asfac
 			const AllowableTolerance:Number = 5.00;
 			
 			var factory:AsFactory = new AsFactory();
-			var resolutions:Number = 0;
-			var instance:Dictionary;
 			
-			var manualStartTime:Number = new Date().getTime();
+			var manualAction:Function = function():void 
+			{ 
+				var instance:Dictionary = new Dictionary();
+			};
+			var manualDuration:Number = Timer.timeAction(manualAction, NumberOfResolutions);
 			
-			while(resolutions < NumberOfResolutions)
+			var asfacAction:Function = function():void
 			{
-				instance = new Dictionary();
-				resolutions++;
+				var instance:Dictionary = factory.resolve(Dictionary); 
 			}
-			
-			var manualDuration:Number = new Date().getTime() - manualStartTime;
-			
-			resolutions = 0;
-			var asFacStartTime:Number = new Date().getTime();
-			
-			while(resolutions < NumberOfResolutions)
-			{
-				instance = factory.resolve(Dictionary);
-				resolutions++;
-			}
-			
-			var asFacDuration:Number = new Date().getTime() - asFacStartTime;
+			var asFacDuration:Number = Timer.timeAction(asfacAction, NumberOfResolutions);
 			
 			var toleratedDuration:Number = manualDuration * AllowableTolerance;
 			var whatWouldHaveBeenOk:Number = asFacDuration / manualDuration;
@@ -60,35 +49,21 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			factory.registerType(Dictionary, Dictionary, true);
 			
-			var resolutions:Number = 0;
-			var instance:Dictionary;
+			var manualAction:Function = function():void 
+			{ 
+				var instance:Dictionary = DictionarySingleton.instance; 
+			};
+			var manualDuration:Number = Timer.timeAction(manualAction, NumberOfResolutions);
 			
-			var manualStartTime:Number = new Date().getTime();
-			
-			while(resolutions < NumberOfResolutions)
+			var asfacAction:Function = function():void
 			{
-				instance = DictionarySingleton.instance;
-				resolutions++;
+				var instance:Dictionary = factory.resolve(Dictionary); 
 			}
-			
-			var manualDuration:Number = new Date().getTime() - manualStartTime;
-			
-			resolutions = 0;
-			var asFacStartTime:Number = new Date().getTime();
-			
-			while(resolutions < NumberOfResolutions)
-			{
-				instance = factory.resolve(Dictionary);
-				resolutions++;
-			}
-			
-			var asFacDuration:Number = new Date().getTime() - asFacStartTime;
+			var asFacDuration:Number = Timer.timeAction(asfacAction, NumberOfResolutions);
 			
 			var toleratedDuration:Number = manualDuration * AllowableTolerance;
 			var whatWouldHaveBeenOk:Number = asFacDuration / manualDuration;
 			assertTrue(asFacDuration < toleratedDuration);
 		}
-		
 	}
-
 }
