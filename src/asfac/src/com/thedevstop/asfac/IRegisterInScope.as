@@ -7,9 +7,7 @@ package com.thedevstop.asfac
 	 */
 	public interface IRegisterInScope
 	{
-		function inScope(scopeName:String):IRegisterAsSingleton
-		function asSingleton():IRegisterCommit
-		function commit():void;
+		function register(instance:*):IRegisterAsType
+		function inScope(scopeName:String):IRegister
 	}
-	
 }

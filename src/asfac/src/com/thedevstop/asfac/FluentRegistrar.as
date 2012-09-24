@@ -4,7 +4,7 @@ package com.thedevstop.asfac
 	 * ...
 	 * @author 
 	 */
-	public class FluentRegistrar implements IRegister, IRegisterAsType, IRegisterAsSingleton, IRegisterInScope, IRegisterCommit
+	public class FluentRegistrar implements IRegister, IRegisterAsType, IRegisterAsSingleton, IRegisterInScope
 	{
 		private var _factory:AsFactory;
 		private var _instance:*;
@@ -24,28 +24,30 @@ package com.thedevstop.asfac
 			return this;
 		}
 		
-		public function asType(type:Class):IRegisterInScope
-		{
-			_type = type;
-			
-			return this;
-		}
-		
-		public function inScope(scopeName:String):IRegisterAsSingleton
+		public function inScope(scopeName:String):IRegister
 		{
 			_scopeName = scopeName;
 			
 			return this;
 		}
 		
-		public function asSingleton():IRegisterCommit
+		public function asType(type:Class):IRegisterAsSingleton
 		{
-			_asSingleton = true;
+			_type = type;
+			
+			updateRegistration();
 			
 			return this;
 		}
 		
-		public function commit():void
+		public function asSingleton():void
+		{
+			_asSingleton = true;
+			
+			updateRegistration();
+		}
+		
+		private function updateRegistration():void
 		{
 			if (_instance is Class)
 				_factory.registerType(_instance, _type, _scopeName, _asSingleton);

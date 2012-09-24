@@ -161,6 +161,24 @@ package com.thedevstop.asfac
 			var instance:Dictionary = factory.resolve(Dictionary);		
 		}
 		
+		public function test_should_pass_factory_and_scope_name_into_callback_during_resolution():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var foo:Object = { bar:"baz" };
+			factory.registerInstance(foo, Object);
+			
+			factory.registerCallback(function (asFactory:AsFactory, scopeName:String):HasObjectProperty
+			{
+				var result:HasObjectProperty = new HasObjectProperty();
+				result.theObject = factory.resolve(Object);
+				return result;
+			}, HasObjectProperty);
+			
+			var instance:HasObjectProperty = factory.resolve(HasObjectProperty);
+			assertSame(foo, instance.theObject);
+		}
+		
 		public function test_should_pass_scope_name_into_callback_during_resolution():void
 		{
 			var factory:AsFactory = new AsFactory();

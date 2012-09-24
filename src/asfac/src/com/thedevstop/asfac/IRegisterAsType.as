@@ -6,6 +6,6 @@ package com.thedevstop.asfac
 	 */
 	public interface IRegisterAsType
 	{
-		function asType(type:Class):IRegisterInScope
+		function asType(type:Class):IRegisterAsSingleton
 	}
 }

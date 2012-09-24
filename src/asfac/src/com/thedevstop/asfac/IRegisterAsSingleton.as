@@ -6,7 +6,6 @@ package com.thedevstop.asfac
 	 */
 	public interface IRegisterAsSingleton
 	{
-		function asSingleton():IRegisterCommit
-		function commit():void;
+		function asSingleton():void
 	}
 }

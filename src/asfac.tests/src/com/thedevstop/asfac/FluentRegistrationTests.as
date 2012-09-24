@@ -20,7 +20,7 @@ package com.thedevstop.asfac
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var instance:Object = { foo:"bar" };
-			factory.register(instance).asType(Object).commit();
+			factory.register(instance).asType(Object);
 			
 			var result:Object = factory.resolve(Object);
 			assertSame(instance, result);
@@ -30,7 +30,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(Dictionary).asType(Dictionary).commit();
+			factory.register(Dictionary).asType(Dictionary);
 			
 			var result:Object = factory.resolve(Dictionary);
 			assertTrue(result.constructor == Dictionary);
@@ -41,7 +41,7 @@ package com.thedevstop.asfac
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var source:Array = [1, 2, 3];
-			factory.register(function():Array { return source; }).asType(Array).commit();
+			factory.register(function():Array { return source; }).asType(Array);
 			
 			var result:Array = factory.resolve(Array);
 			assertSame(source, result);			
@@ -53,7 +53,7 @@ package com.thedevstop.asfac
 			
 			var registerFunc:Function = function():void
 			{
-				factory.register(function(asFactory:AsFactory, name:String, num:Number):Array { return [1, 2, 3]; }).asType(Array).commit();
+				factory.register(function(asFactory:AsFactory, name:String, num:Number):Array { return [1, 2, 3]; }).asType(Array);
 			};
 			
 			assertThrows(IllegalOperationError, registerFunc);
@@ -63,7 +63,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).asSingleton().commit();
+			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).asSingleton();
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -74,7 +74,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(Dictionary).asType(Dictionary).asSingleton().commit();
+			factory.register(Dictionary).asType(Dictionary).asSingleton();
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -85,7 +85,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(Dictionary).asType(Dictionary).commit();
+			factory.register(Dictionary).asType(Dictionary);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -96,7 +96,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).asSingleton().commit();
+			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).asSingleton();
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -107,7 +107,7 @@ package com.thedevstop.asfac
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
-			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary).commit();
+			factory.register(function():Dictionary { return new Dictionary(); } ).asType(Dictionary);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -120,7 +120,7 @@ package com.thedevstop.asfac
 			
 			var registerFunc:Function = function():void
 			{
-				factory.register(Dictionary).asType(null).commit();
+				factory.register(Dictionary).asType(null);
 			};
 			
 			assertThrows(IllegalOperationError, registerFunc);			
@@ -131,14 +131,14 @@ package com.thedevstop.asfac
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var foo:Object = { bar:"baz" };
-			factory.register(foo).asType(Object).commit();
+			factory.register(foo).asType(Object);
 			
 			factory.register(function (asFactory:AsFactory, scopeName:String):HasObjectProperty
 			{
 				var result:HasObjectProperty = new HasObjectProperty();
 				result.theObject = factory.resolve(Object);
 				return result;
-			}).asType(HasObjectProperty).commit();
+			}).asType(HasObjectProperty);
 			
 			var instance:HasObjectProperty = factory.resolve(HasObjectProperty);
 			assertSame(foo, instance.theObject);
