@@ -93,5 +93,33 @@ package com.thedevstop.asfac
 			
 			assertSame(obj, propertyObject.theObject);					
 		}
+		
+		public function test_should_resolve_from_singleton_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			AsFactory.instance.registerInstance(singletonDictionary, Dictionary);
+			
+			var factory:AsFactory = new AsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.registerInstance(instanceDictionary, Dictionary);
+			
+			var instance:Dictionary = AsFactory.instance.resolve(Dictionary);
+			
+			assertSame(instance, singletonDictionary);
+		}
+		
+		public function test_should_resolve_from_instance_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			AsFactory.instance.registerInstance(singletonDictionary, Dictionary);
+			
+			var factory:AsFactory = new AsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.registerInstance(instanceDictionary, Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertSame(instance, instanceDictionary);
+		}
 	}
 }

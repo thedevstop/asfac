@@ -6,12 +6,20 @@ package com.thedevstop.asfac
 	 */
 	public class FluentAsFactory
 	{
+		private static var _instance:FluentAsFactory = null;
+		
+		static public function get instance():FluentAsFactory
+		{
+			_instance = _instance || new FluentAsFactory(AsFactory.instance);
+			return _instance;
+		}
+		
 		private var _factory:AsFactory;
 		private var _registrar:FluentRegistrar;
 		
-		public function FluentAsFactory()
+		public function FluentAsFactory(factory:AsFactory = null)
 		{
-			_factory = new AsFactory();
+			_factory = factory || new AsFactory();
 			_registrar = new FluentRegistrar(_factory);
 		}
 		
