@@ -5,15 +5,7 @@ package com.thedevstop.asfac
 	 * @author 
 	 */
 	public class FluentAsFactory
-	{
-		private static var _instance:FluentAsFactory = null;
-		
-		static public function get instance():FluentAsFactory
-		{
-			_instance = _instance || new FluentAsFactory(AsFactory.instance);
-			return _instance;
-		}
-		
+	{	
 		private var _factory:AsFactory;
 		private var _registrar:FluentRegistrar;
 		

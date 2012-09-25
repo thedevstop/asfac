@@ -11,14 +11,6 @@ package com.thedevstop.asfac
 	 */
 	public class AsFactory
 	{
-		private static var _instance:AsFactory = null;
-		
-		static public function get instance():AsFactory
-		{
-			_instance = _instance || new AsFactory();
-			return _instance;
-		}
-		
 		private var _registrations:Dictionary;
 		private var _descriptions:Dictionary;
 		
