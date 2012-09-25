@@ -26,6 +26,23 @@ package com.thedevstop.asfac
 		}
 		
 		/**
+		 * Registers a way of resolving a dependency when requested.
+		 * @param	instance How the dependency should be resolved. It can be either a Type, Instance, or Callback function.
+		 * @param	type the target type for which the instance should be returned at resolution time
+		 * @param	scopeName the named scope for the registration
+		 * @param	asSingleton If true, the resolved dependency will be cached and returned each time the type is resolved.
+		 */
+		public function register(instance:*, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void
+		{
+			if (instance is Class)
+				registerType(instance, type, scopeName, asSingleton);
+			else if (instance is Function)
+				registerCallback(instance, type, scopeName, asSingleton);
+			else
+				registerInstance(instance, type, scopeName);
+		}
+		
+		/**
 		 * Registers a concrete instance to be returned whenever the target type is requested
 		 * @param	instance the concrete instance to be returned
 		 * @param	type the target type for which the instance should be returned at resolution time

@@ -169,5 +169,38 @@ package com.thedevstop.asfac
 			
 			assertThrows(IllegalOperationError, registerFunc);					
 		}
+		
+		public function test_register_should_register_type():void
+		{
+			var factory:AsFactory = new AsFactory();
+			factory.register(Dictionary, Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertTrue(instance is Dictionary);
+		}
+		
+		public function test_register_should_register_instance():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var registeredInstance:Dictionary = new Dictionary();
+			factory.register(registeredInstance, Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertSame(instance, registeredInstance);
+		}
+		
+		public function test_register_should_register_callback():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var registeredInstance:Dictionary = new Dictionary();
+			var callback:Function = function():Dictionary { return registeredInstance; };
+			factory.register(callback, Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertSame(instance, registeredInstance);
+		}
 	}
 }

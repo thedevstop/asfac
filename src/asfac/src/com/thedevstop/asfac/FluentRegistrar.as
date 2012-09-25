@@ -55,6 +55,9 @@ package com.thedevstop.asfac
 			return this;
 		}
 		
+		/**
+		 * Finishes this registration by specifying that the instance should be treated as a singleton.
+		 */
 		public function asSingleton():void
 		{
 			_asSingleton = true;
@@ -64,12 +67,7 @@ package com.thedevstop.asfac
 		
 		private function updateRegistration():void
 		{
-			if (_instance is Class)
-				_factory.registerType(_instance, _type, _scopeName, _asSingleton);
-			else if (_instance is Function)
-				_factory.registerCallback(_instance, _type, _scopeName, _asSingleton);
-			else
-				_factory.registerInstance(_instance, _type, _scopeName);	
+			_factory.register(_instance, _type, _scopeName, _asSingleton);
 		}
 	}
 }
