@@ -1,11 +1,13 @@
 package com.thedevstop.asfac 
 {
+	
 	/**
 	 * ...
 	 * @author 
 	 */
-	public interface IRegisterAsSingleton
+	public interface IResolve 
 	{
-		function asSingleton():void
+		function resolve(type:Class):*
 	}
+	
 }

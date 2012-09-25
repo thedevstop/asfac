@@ -4,7 +4,7 @@ package com.thedevstop.asfac
 	 * ...
 	 * @author 
 	 */
-	public interface IRegisterAs 
+	public interface IRegisterAsType
 	{
 		function asType(type:Class):IRegisterAsSingleton
 	}

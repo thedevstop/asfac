@@ -53,7 +53,7 @@ package com.thedevstop.asfac
 			
 			var registerFunc:Function = function():void
 			{
-				factory.register(function(asFactory:AsFactory, name:String):Array { return [1, 2, 3]; }).asType(Array);
+				factory.register(function(asFactory:AsFactory, name:String, num:Number):Array { return [1, 2, 3]; }).asType(Array);
 			};
 			
 			assertThrows(IllegalOperationError, registerFunc);
@@ -126,14 +126,14 @@ package com.thedevstop.asfac
 			assertThrows(IllegalOperationError, registerFunc);			
 		}
 		
-		public function test_registered_callbacks_can_accept_factory_as_parameter():void
+		public function test_registered_callbacks_can_accept_factory_and_scope_name_as_parameters():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			
 			var foo:Object = { bar:"baz" };
 			factory.register(foo).asType(Object);
 			
-			factory.register(function (asFactory:AsFactory):HasObjectProperty
+			factory.register(function (asFactory:AsFactory, scopeName:String):HasObjectProperty
 			{
 				var result:HasObjectProperty = new HasObjectProperty();
 				result.theObject = factory.resolve(Object);
