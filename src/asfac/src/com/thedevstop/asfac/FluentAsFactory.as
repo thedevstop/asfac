@@ -5,14 +5,14 @@ package com.thedevstop.asfac
 	 * @author 
 	 */
 	public class FluentAsFactory implements IRegisterInScope, IResolveFromScope
-	{
+	{	
 		private var _factory:AsFactory;
 		private var _registrar:FluentRegistrar;
 		private var _resolver:FluentResolver;
 		
-		public function FluentAsFactory()
+		public function FluentAsFactory(factory:AsFactory = null)
 		{
-			_factory = new AsFactory();
+			_factory = factory || new AsFactory();
 			_registrar = new FluentRegistrar(_factory);
 			_resolver = new FluentResolver(_factory);
 		}

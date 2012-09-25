@@ -1,11 +1,9 @@
 package com.thedevstop.asfac 
 {
-	import adobe.utils.CustomActions;
 	import asunit.framework.TestCase;
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
 	import com.thedevstop.asfac.stubs.HasObjectProperty;
 	import com.thedevstop.asfac.stubs.IPoint;
-	import flash.display.AVM1Movie;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
 	
@@ -96,6 +94,33 @@ package com.thedevstop.asfac
 			assertSame(obj, propertyObject.theObject);					
 		}
 		
+		public function test_should_resolve_from_singleton_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			
+			var factory:AsFactory = new AsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.registerInstance(instanceDictionary, Dictionary);
+			
+			var instance:Dictionary = AsFactoryLocator.factory.resolve(Dictionary);
+			
+			assertSame(instance, singletonDictionary);
+		}
+		
+		public function test_should_resolve_from_instance_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			
+			var factory:AsFactory = new AsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.registerInstance(instanceDictionary, Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertSame(instance, instanceDictionary);
+		}
 		public function test_should_resolve_type_from_unspecified_scope():void
 		{
 			var factory:AsFactory = new AsFactory();
