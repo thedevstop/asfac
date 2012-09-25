@@ -73,7 +73,7 @@ package com.thedevstop.asfac
 			
 			var registerFunc:Function = function():void
 			{
-				factory.registerCallback(function(asFactory:AsFactory, name:String):Array { return [1, 2, 3]; }, Array);
+				factory.registerCallback(function(asFactory:AsFactory, name:String, num:Number):Array { return [1, 2, 3]; }, Array);
 			};
 			
 			assertThrows(IllegalOperationError, registerFunc);
@@ -83,7 +83,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, true);
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, true);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -94,7 +94,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerType(Dictionary, Dictionary, true);
+			factory.registerType(Dictionary, Dictionary, AsFactory.DefaultScopeName, true);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -105,7 +105,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerType(Dictionary, Dictionary, false);
+			factory.registerType(Dictionary, Dictionary, AsFactory.DefaultScopeName, false);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -116,7 +116,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, true);
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, true);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -127,7 +127,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, false);
+			factory.registerCallback(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, false);
 			
 			var result1:Object = factory.resolve(Dictionary);
 			var result2:Object = factory.resolve(Dictionary);
@@ -168,24 +168,6 @@ package com.thedevstop.asfac
 			};
 			
 			assertThrows(IllegalOperationError, registerFunc);					
-		}
-		
-		public function test_registered_callbacks_can_accept_factory_as_parameter():void
-		{
-			var factory:AsFactory = new AsFactory();
-			
-			var foo:Object = { bar:"baz" };
-			factory.registerInstance(foo, Object);
-			
-			factory.registerCallback(function (asFactory:AsFactory):HasObjectProperty
-			{
-				var result:HasObjectProperty = new HasObjectProperty();
-				result.theObject = factory.resolve(Object);
-				return result;
-			}, HasObjectProperty);
-			
-			var instance:HasObjectProperty = factory.resolve(HasObjectProperty);
-			assertSame(foo, instance.theObject);
 		}
 	}
 }
