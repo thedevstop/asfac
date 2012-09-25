@@ -143,5 +143,15 @@ package com.thedevstop.asfac
 			var instance:HasObjectProperty = factory.resolve(HasObjectProperty);
 			assertSame(foo, instance.theObject);
 		}
+		
+		public function test_fluentasfactorylocator_should_register_with_asfactory_from_asfactorylocator():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			FluentAsFactoryLocator.factory.register(singletonDictionary).asType(Dictionary);
+			
+			var instance:Dictionary = AsFactoryLocator.factory.resolve(Dictionary);
+			
+			assertSame(instance, singletonDictionary);	
+		}
 	}
 }

@@ -94,33 +94,6 @@ package com.thedevstop.asfac
 			assertSame(obj, propertyObject.theObject);					
 		}
 		
-		public function test_should_resolve_from_singleton_registration():void
-		{
-			var singletonDictionary:Dictionary = new Dictionary();
-			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
-			
-			var factory:AsFactory = new AsFactory();
-			var instanceDictionary:Dictionary = new Dictionary();
-			factory.registerInstance(instanceDictionary, Dictionary);
-			
-			var instance:Dictionary = AsFactoryLocator.factory.resolve(Dictionary);
-			
-			assertSame(instance, singletonDictionary);
-		}
-		
-		public function test_should_resolve_from_instance_registration():void
-		{
-			var singletonDictionary:Dictionary = new Dictionary();
-			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
-			
-			var factory:AsFactory = new AsFactory();
-			var instanceDictionary:Dictionary = new Dictionary();
-			factory.registerInstance(instanceDictionary, Dictionary);
-			
-			var instance:Dictionary = factory.resolve(Dictionary);
-			
-			assertSame(instance, instanceDictionary);
-		}
 		public function test_should_resolve_type_from_unspecified_scope():void
 		{
 			var factory:AsFactory = new AsFactory();
@@ -218,6 +191,34 @@ package com.thedevstop.asfac
 			factory.registerCallback(resolveFunction, Dictionary, scope);
 			
 			var instance:Dictionary = factory.resolve(Dictionary);		
+		}
+		
+		public function test_should_resolve_from_singleton_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			
+			var factory:AsFactory = new AsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.registerInstance(instanceDictionary, Dictionary);
+			
+			var instance:Dictionary = AsFactoryLocator.factory.resolve(Dictionary);
+			
+			assertSame(instance, singletonDictionary);
+		}
+		
+		public function test_should_resolve_from_instance_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			
+			var factory:AsFactory = new AsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.registerInstance(instanceDictionary, Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertSame(instance, instanceDictionary);
 		}
 	}
 }

@@ -17,6 +17,11 @@ package com.thedevstop.asfac
 			_factory = factory;
 		}
 		
+		/**
+		 * Register a dependency.
+		 * @param	instance How the dependency should be resolved.
+		 * @return The ability to specify the type of dependency.
+		 */
 		public function register(instance:*):IRegisterAsType
 		{
 			_instance = instance;
@@ -24,6 +29,11 @@ package com.thedevstop.asfac
 			return this;
 		}
 		
+		/**
+		 * Register a dependency in a specific scope
+		 * @param	scopeName The name of the scope.
+		 * @return The ability to register in the scope.
+		 */
 		public function inScope(scopeName:String):IRegister
 		{
 			_scopeName = scopeName;
@@ -31,6 +41,11 @@ package com.thedevstop.asfac
 			return this;
 		}
 		
+		/**
+		 * Continues the registration by specifying the type of dependency.
+		 * @param	type The type of dependency this registration resolves.
+		 * @return The ability to specify the resolution is a singleton.
+		 */
 		public function asType(type:Class):IRegisterAsSingleton
 		{
 			_type = type;

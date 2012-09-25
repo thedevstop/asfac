@@ -14,11 +14,21 @@ package com.thedevstop.asfac
 			_factory = factory;
 		}
 		
+		/**
+		 * Resolve a dependency.
+		 * @param	type The type of dependency to resolve.
+		 * @return An instance of the type.
+		 */
 		public function resolve(type:Class):*
 		{
 			return _factory.resolve(type, _scopeName);
 		}
 		
+		/**
+		 * Resolve a dependency from a specifc scope.
+		 * @param	scopeName The name of the scope.
+		 * @return The ability to resolve from this scope.
+		 */
 		public function fromScope(scopeName:String):IResolve
 		{
 			_scopeName = scopeName;
@@ -26,5 +36,4 @@ package com.thedevstop.asfac
 			return this;
 		}
 	}
-
 }

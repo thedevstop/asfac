@@ -195,5 +195,43 @@ package com.thedevstop.asfac
 			
 			var instance:Dictionary = factory.resolve(Dictionary);		
 		}
+		
+		public function test_should_resolve_from_singleton_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			FluentAsFactoryLocator.factory.register(singletonDictionary).asType(Dictionary);
+			
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.register(instanceDictionary).asType(Dictionary);
+			
+			var instance:Dictionary = FluentAsFactoryLocator.factory.resolve(Dictionary);
+			
+			assertSame(instance, singletonDictionary);
+		}
+		
+		public function test_should_resolve_from_instance_registration():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			FluentAsFactoryLocator.factory.register(singletonDictionary).asType(Dictionary);
+			
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var instanceDictionary:Dictionary = new Dictionary();
+			factory.register(instanceDictionary).asType(Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertSame(instance, instanceDictionary);
+		}
+		
+		public function test_fluentasfactorylocator_should_resolve_with_asfactory_from_asfactorylocator():void
+		{
+			var singletonDictionary:Dictionary = new Dictionary();
+			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			
+			var instance:Dictionary = FluentAsFactoryLocator.factory.resolve(Dictionary);
+			
+			assertSame(instance, singletonDictionary);	
+		}
 	}
 }
