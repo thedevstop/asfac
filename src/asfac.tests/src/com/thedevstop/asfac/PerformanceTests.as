@@ -47,7 +47,7 @@ package com.thedevstop.asfac
 			const AllowableTolerance:Number = 2.5;
 			
 			var factory:AsFactory = new AsFactory();
-			factory.registerType(Dictionary, Dictionary, true);
+			factory.registerType(Dictionary, Dictionary, AsFactory.DefaultScopeName, true);
 			
 			var manualAction:Function = function():void 
 			{ 
