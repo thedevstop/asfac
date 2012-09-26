@@ -10,7 +10,7 @@ In it's simplest form _asfac_ is contained in a single file, _AsFactory.as_. You
 You can then perform registration and resolution as follows
 
     var asFactory:AsFactory = new AsFactory();
-    asFactory.register(StandardGreeter).as(ISayHello);
+    asFactory.register(StandardGreeter, ISayHello);
     var greeter:ISayHello = asFactory.resolve(ISayHello);
 
 
