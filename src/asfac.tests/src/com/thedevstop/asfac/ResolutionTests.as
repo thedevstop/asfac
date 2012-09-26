@@ -30,7 +30,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerType(ConstructorWithRequiredParameters, ConstructorWithRequiredParameters);
+			factory.register(ConstructorWithRequiredParameters, ConstructorWithRequiredParameters);
 			
 			var result:Object = factory.resolve(ConstructorWithRequiredParameters);
 			assertTrue(result.constructor === ConstructorWithRequiredParameters);
@@ -40,7 +40,7 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerType(Dictionary, Dictionary);
+			factory.register(Dictionary, Dictionary);
 			
 			var result:Object = factory.resolve(Dictionary);
 			assertTrue(result is Dictionary);			
@@ -52,7 +52,7 @@ package com.thedevstop.asfac
 			
 			var instance:Dictionary = new Dictionary();
 			instance["foo"] = "bar";
-			factory.registerInstance(instance, Dictionary);
+			factory.register(instance, Dictionary);
 			
 			var result:ConstructorWithRequiredParameters = factory.resolve(ConstructorWithRequiredParameters);
 			assertSame(instance, result.dictionary);
@@ -87,7 +87,7 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var obj:Object = { numbers:[1, 2, 3] };
-			factory.registerInstance(obj, Object);
+			factory.register(obj, Object);
 			
 			var propertyObject:HasObjectProperty = factory.resolve(HasObjectProperty);
 			
@@ -99,7 +99,7 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var obj:Object = { numbers:[1, 2, 3] };
-			factory.registerInstance(obj, Object, "nonDefaultScope");
+			factory.register(obj, Object, "nonDefaultScope");
 			
 			var instance:Object = factory.resolve(Object);
 			assertNotNull(instance);
@@ -111,7 +111,7 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var obj:Object = { numbers:[1, 2, 3] };
-			factory.registerInstance(obj, Object, "nonDefaultScope");
+			factory.register(obj, Object, "nonDefaultScope");
 			
 			var instance:Object = factory.resolve(Object, "nonDefaultScope");
 			assertSame(instance, obj);
@@ -122,7 +122,7 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var obj:Object = { numbers:[1, 2, 3] };
-			factory.registerInstance(obj, Object);
+			factory.register(obj, Object);
 			
 			var instance:Object = factory.resolve(Object);
 			assertSame(instance, obj);
@@ -133,7 +133,7 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var obj:Object = { numbers:[1, 2, 3] };
-			factory.registerInstance(obj, Object);
+			factory.register(obj, Object);
 			
 			var resolveFunction:Function = function ():void 
 			{
@@ -154,7 +154,7 @@ package com.thedevstop.asfac
 				assertSame(factory, asFactory);
 				return new Dictionary();
 			};
-			factory.registerCallback(resolveFunction, Dictionary, scope);
+			factory.register(resolveFunction, Dictionary, scope);
 			
 			var instance:Dictionary = factory.resolve(Dictionary);		
 		}
@@ -164,9 +164,9 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var foo:Object = { bar:"baz" };
-			factory.registerInstance(foo, Object);
+			factory.register(foo, Object);
 			
-			factory.registerCallback(function (asFactory:AsFactory, scopeName:String):HasObjectProperty
+			factory.register(function (asFactory:AsFactory, scopeName:String):HasObjectProperty
 			{
 				var result:HasObjectProperty = new HasObjectProperty();
 				result.theObject = factory.resolve(Object);
@@ -188,7 +188,7 @@ package com.thedevstop.asfac
 				assertEquals(scopeName, scope);
 				return new Dictionary();
 			};
-			factory.registerCallback(resolveFunction, Dictionary, scope);
+			factory.register(resolveFunction, Dictionary, scope);
 			
 			var instance:Dictionary = factory.resolve(Dictionary);		
 		}
@@ -196,11 +196,11 @@ package com.thedevstop.asfac
 		public function test_should_resolve_from_singleton_registration():void
 		{
 			var singletonDictionary:Dictionary = new Dictionary();
-			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			AsFactoryLocator.factory.register(singletonDictionary, Dictionary);
 			
 			var factory:AsFactory = new AsFactory();
 			var instanceDictionary:Dictionary = new Dictionary();
-			factory.registerInstance(instanceDictionary, Dictionary);
+			factory.register(instanceDictionary, Dictionary);
 			
 			var instance:Dictionary = AsFactoryLocator.factory.resolve(Dictionary);
 			
@@ -210,11 +210,11 @@ package com.thedevstop.asfac
 		public function test_should_resolve_from_instance_registration():void
 		{
 			var singletonDictionary:Dictionary = new Dictionary();
-			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			AsFactoryLocator.factory.register(singletonDictionary, Dictionary);
 			
 			var factory:AsFactory = new AsFactory();
 			var instanceDictionary:Dictionary = new Dictionary();
-			factory.registerInstance(instanceDictionary, Dictionary);
+			factory.register(instanceDictionary, Dictionary);
 			
 			var instance:Dictionary = factory.resolve(Dictionary);
 			

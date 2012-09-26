@@ -48,7 +48,7 @@ package com.thedevstop.asfac
 		 * @param	type the target type for which the instance should be returned at resolution time
 		 * @param scopeName the named scope for the registration
 		 */
-		public function registerInstance(instance:Object, type:Class, scopeName:String = DefaultScopeName):void
+		private function registerInstance(instance:Object, type:Class, scopeName:String = DefaultScopeName):void
 		{
 			var returnInstance:Function = function():Object
 			{
@@ -65,11 +65,8 @@ package com.thedevstop.asfac
 		 * @param	asSingleton If true, only one instance will be created and returned on each request. If false (default), a new instance
 		 * is created and returned at each resolution request
 		 */
-		public function registerType(instanceType:Class, type:Class, scopeName:String=DefaultScopeName, asSingleton:Boolean=false):void 
+		private function registerType(instanceType:Class, type:Class, scopeName:String=DefaultScopeName, asSingleton:Boolean=false):void 
 		{
-			if (!instanceType)
-				throw new IllegalOperationError("InstanceType cannot be null when registering a type");
-			
 			var resolveType:Function = function():Object
 			{
 				return resolveByClass(instanceType);
@@ -85,7 +82,7 @@ package com.thedevstop.asfac
 		 * @param	asSingleton If true, callback is only invoked once and the result is returned on each request. If false (default), 
 		 * callback is invoked on each resolution request
 		 */
-		public function registerCallback(callback:Function, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void 
+		private function registerCallback(callback:Function, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void 
 		{
 			if (!type)
 				throw new IllegalOperationError("Type cannot be null when registering a callback");
@@ -193,9 +190,6 @@ package com.thedevstop.asfac
 		 */
 		private function validateCallback(callback:Function):void
 		{
-			if (callback == null)
-				throw new IllegalOperationError("Callback cannot be null when registering a type");
-			
 			// TODO: How to check type?
 			if (callback.length != 0 && callback.length != 2)
 				throw new IllegalOperationError("Callback function must accept 0 or 2 arguments. The first is AsFactory and the second is scope name.");
