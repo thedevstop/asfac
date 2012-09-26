@@ -16,7 +16,7 @@ You can then perform registration and resolution as follows
 
 **Accessing A Common AsFactory From Separate Components**
 
-Obviously, your application components should not create new instances of _AsFactory_, as they would not have prior registrations. You can make the _AsFactory_ available to application components in a variety of ways, but for the sake of getting you off the ground quickly, a locator classes is provided.
+Obviously, your application components should not create new instances of _AsFactory_, as they would not have prior registrations. You can make the _AsFactory_ available to application components in a variety of ways, but for the sake of getting you off the ground quickly, a locator class is provided.
 
 Simply use the following instance for out of the box management of a global _AsFactory_ for use across your application.
 
