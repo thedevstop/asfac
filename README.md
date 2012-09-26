@@ -14,7 +14,7 @@ You can then perform registration and resolution as follows
     var greeter:ISayHello = asFactory.resolve(ISayHello);
 
 
-**Accessing AsFactory**
+**Accessing A Common AsFactory From Separate Components**
 
 Obviously, your application components should not create new instances of _AsFactory_, as they would not have prior registrations. You can make the _AsFactory_ available to application components in a variety of ways, but for the sake of getting you off the ground quickly, a locator classes is provided.
 
