@@ -51,7 +51,7 @@ Since the Inject metadata is not recognized out of the box you must add the foll
 To register a type for an interface (new instance per request)
 
     // Standard
-    factory.registerType(InMemoryUserRepository, IUserRepository);    
+    factory.register(InMemoryUserRepository, IUserRepository);    
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
     // Fluent
@@ -61,7 +61,7 @@ To register a type for an interface (new instance per request)
 Register type for instance (singleton instance on each request)
     
     // Standard
-    factory.registerType(InMemoryUserRepository, IUserRepository, true);
+    factory.register(InMemoryUserRepository, IUserRepository, true);
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
     // Fluent
@@ -71,7 +71,7 @@ Register type for instance (singleton instance on each request)
 Register type for instance with a named scope
 
     // Standard
-    factory.registerType(InMemoryUserRepository, IUserRepository, "memory", true);    
+    factory.register(InMemoryUserRepository, IUserRepository, "memory", true);    
     var userRepository:IUserRepository = factory.resolve(IUserRepository, "memory");
 
     // Fluent
@@ -81,7 +81,7 @@ Register type for instance with a named scope
 Register an instance for interface
 
     // Standard
-    factory.registerInstance(new InMemoryUserRepository(), IUserRepository);    
+    factory.register(new InMemoryUserRepository(), IUserRepository);    
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
     // Fluent
@@ -90,14 +90,15 @@ Register an instance for interface
 
 Register callback for type
 
-    var buildMyRepository:Function = function():Object { 
+    var buildMyRepository:Function = function(factory:AsFactory, scopeName:String):Object { 
         // ... (build your instance however is appropriate)
+        // ... (note that the factory and scope are provided for your use)
     };
 
     ...
 
     // Standard
-    factory.registerCallback(buildMyRepository, IUserRepository);
+    factory.register(buildMyRepository, IUserRepository);
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
     
     // Fluent
@@ -125,11 +126,11 @@ Resovle type with property injection
 	...
 	
     // Standard
-    factory.registerType(InMemoryUserRepository, IUserRepository);
+    factory.register(InMemoryUserRepository, IUserRepository);
     var context:ApplicationContext = factory.resolve(ApplicationContext);
 
     // Fluent
-    factory.register(InMemoryUserRepository).asType(IUserRepository).asSingleton();    
+    factory.register(InMemoryUserRepository).asType(IUserRepository);    
     var context:ApplicationContext = factory.resolve(ApplicationContext);
 
 **License**
