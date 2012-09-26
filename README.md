@@ -11,7 +11,7 @@ You can then perform registration and resolution as follows
 
     var asFactory:AsFactory = new AsFactory();
     asFactory.register(StandardGreeter).as(ISayHello);
-    var greeter:ISayHello = asFactory.factory.resolve(ISayHello);
+    var greeter:ISayHello = asFactory.resolve(ISayHello);
 
 
 **Accessing AsFactory**
