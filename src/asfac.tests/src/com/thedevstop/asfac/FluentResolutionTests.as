@@ -227,7 +227,7 @@ package com.thedevstop.asfac
 		public function test_fluentasfactorylocator_should_resolve_with_asfactory_from_asfactorylocator():void
 		{
 			var singletonDictionary:Dictionary = new Dictionary();
-			AsFactoryLocator.factory.registerInstance(singletonDictionary, Dictionary);
+			AsFactoryLocator.factory.register(singletonDictionary, Dictionary);
 			
 			var instance:Dictionary = FluentAsFactoryLocator.factory.resolve(Dictionary);
 			
