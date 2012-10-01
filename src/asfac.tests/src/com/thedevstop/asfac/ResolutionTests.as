@@ -220,5 +220,17 @@ package com.thedevstop.asfac
 			
 			assertSame(instance, instanceDictionary);
 		}
+		
+		public function test_should_resolve_same_singleton_when_type_is_registered_many_times():void
+		{
+			var factory:AsFactory = new AsFactory();
+			factory.register(Dictionary, Object, AsFactory.DefaultScopeName, true);
+			factory.register(Dictionary, Dictionary, AsFactory.DefaultScopeName, true);
+			
+			var objInstance:Object = factory.resolve(Object);
+			var dictInstance:Object = factory.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);
+		}
 	}
 }
