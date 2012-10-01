@@ -244,5 +244,20 @@ package com.thedevstop.asfac
 			
 			assertSame(objInstance, dictInstance);			
 		}
+		
+		public function test_should_resolve_same_singleton_callback_when_registered_many_times():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var callback:Function = function():Object { return new Dictionary() };
+			
+			factory.register(callback, Object, AsFactory.DefaultScopeName, true);
+			factory.register(callback, Dictionary, AsFactory.DefaultScopeName, true);
+			
+			var objInstance:Object = factory.resolve(Object);
+			var dictInstance:Object = factory.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);
+		}
 	}
 }
