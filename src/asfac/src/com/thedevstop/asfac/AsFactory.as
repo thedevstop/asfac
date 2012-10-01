@@ -12,6 +12,7 @@ package com.thedevstop.asfac
 	public class AsFactory
 	{
 		static public const DefaultScopeName:String = "";
+		static private const SingletonCallbacks:Dictionary = new Dictionary();
 		
 		private var _registrations:Dictionary;
 		private var _descriptions:Dictionary;
@@ -67,10 +68,23 @@ package com.thedevstop.asfac
 		 */
 		private function registerType(instanceType:Class, type:Class, scopeName:String=DefaultScopeName, asSingleton:Boolean=false):void 
 		{
-			var resolveType:Function = function():Object
+			var resolveType:Function;
+			
+			if (asSingleton && 
+				SingletonCallbacks[instanceType] !== undefined)
 			{
-				return resolveByClass(instanceType);
-			};
+				resolveType = SingletonCallbacks[instanceType];
+			}
+			else
+			{
+				resolveType = function():Object
+				{
+					return resolveByClass(instanceType);						
+				};
+				
+				if (asSingleton)
+					SingletonCallbacks[instanceType] = resolveType;
+			}
 			
 			registerCallback(resolveType, type, scopeName, asSingleton);
 		}
@@ -96,18 +110,31 @@ package com.thedevstop.asfac
 			}
 			
 			if (asSingleton)
-				registrationsByScope[scopeName] = (function(callback:Function, scopeName:String):Function
+			{
+				var singletonCallback:Function;
+				
+				if (SingletonCallbacks[callback] !== undefined)
+					singletonCallback = SingletonCallbacks[callback];
+				else	
 				{
-					var instance:Object = null;
-					
-					return function():Object
+					singletonCallback = (function(callback:Function, scopeName:String):Function
 					{
-						if (!instance)
-							instance = callback(this, scopeName);
+						var instance:Object = null;
 						
-						return instance;
-					};
-				})(callback, scopeName);
+						return function():Object
+						{
+							if (!instance)
+								instance = callback(this, scopeName);
+							
+							return instance;
+						};
+					})(callback, scopeName);
+					
+					SingletonCallbacks[callback] = singletonCallback;
+				}
+				
+				registrationsByScope[scopeName] = singletonCallback;
+			}
 			else
 				registrationsByScope[scopeName] = callback;
 		}
