@@ -232,5 +232,17 @@ package com.thedevstop.asfac
 			
 			assertSame(objInstance, dictInstance);
 		}
+		
+		public function test_should_resolve_same_singleton_when_type_is_registered_in_many_scopes():void
+		{
+			var factory:AsFactory = new AsFactory();
+			factory.register(Dictionary, Object, "nonDefaultScope", true);
+			factory.register(Dictionary, Dictionary, AsFactory.DefaultScopeName, true);
+			
+			var objInstance:Object = factory.resolve(Object, "nonDefaultScope");
+			var dictInstance:Object = factory.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);			
+		}
 	}
 }

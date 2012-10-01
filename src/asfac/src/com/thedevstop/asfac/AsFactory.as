@@ -12,10 +12,10 @@ package com.thedevstop.asfac
 	public class AsFactory
 	{
 		static public const DefaultScopeName:String = "";
+		static private const Singletons:Dictionary = new Dictionary();
 		
 		private var _registrations:Dictionary;
 		private var _descriptions:Dictionary;
-		private var _singletons:Dictionary;
 		
 		/**
 		 * Constructs a new AsFactory
@@ -24,7 +24,6 @@ package com.thedevstop.asfac
 		{
 			_registrations = new Dictionary();
 			_descriptions = new Dictionary();
-			_singletons = new Dictionary();
 		}
 		
 		/**
@@ -73,7 +72,7 @@ package com.thedevstop.asfac
 			{
 				var instance:Object;
 				if (asSingleton)
-					instance = _singletons[instanceType] !== undefined ? _singletons[instanceType] : _singletons[instanceType] = resolveByClass(instanceType);
+					instance = Singletons[instanceType] !== undefined ? Singletons[instanceType] : Singletons[instanceType] = resolveByClass(instanceType);
 				else
 					instance = resolveByClass(instanceType);
 					
