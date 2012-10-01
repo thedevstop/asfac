@@ -233,5 +233,87 @@ package com.thedevstop.asfac
 			
 			assertSame(instance, singletonDictionary);	
 		}
+		
+		public function test_should_resolve_same_singleton_when_type_is_registered_many_times():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			factory.register(Dictionary).asType(Object).asSingleton();
+			factory.register(Dictionary).asType(Dictionary).asSingleton();
+			
+			var objInstance:Object = factory.resolve(Object);
+			var dictInstance:Object = factory.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);
+		}
+		
+		public function test_should_resolve_same_singleton_when_type_is_registered_in_many_scopes():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			factory.inScope("nonDefaultScope").register(Dictionary).asType(Object).asSingleton();
+			factory.register(Dictionary).asType(Dictionary).asSingleton();
+			
+			var objInstance:Object = factory.fromScope("nonDefaultScope").resolve(Object);
+			var dictInstance:Object = factory.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);			
+		}
+		
+		public function test_should_resolve_same_singleton_between_factory_instances():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			factory.inScope("nonDefaultScope").register(Dictionary).asType(Object).asSingleton();
+			var factory2:FluentAsFactory = new FluentAsFactory();
+			factory2.register(Dictionary).asType(Dictionary).asSingleton();
+			
+			var objInstance:Object = factory.fromScope("nonDefaultScope").resolve(Object);
+			var dictInstance:Object = factory2.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);
+		}
+		
+		public function test_should_resolve_same_singleton_callback_when_registered_many_times():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			
+			var callback:Function = function():Object { return new Dictionary() };
+			
+			factory.register(callback).asType(Object).asSingleton();
+			factory.register(callback).asType(Dictionary).asSingleton();
+			
+			var objInstance:Object = factory.resolve(Object);
+			var dictInstance:Object = factory.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);
+		}
+		
+		public function test_should_resolve_same_singleton_callback_when_registered_in_many_scopes():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			
+			var callback:Function = function():Object { return new Dictionary() };
+			
+			factory.inScope("nonDefaultScope").register(callback).asType(Object).asSingleton();
+			factory.register(callback).asType(Dictionary).asSingleton();
+			
+			var objInstance:Object = factory.fromScope("nonDefaultScope").resolve(Object);
+			var dictInstance:Object = factory.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);
+		}
+		
+		public function test_should_resolve_same_singleton_callback_between_factory_instances():void
+		{
+			var callback:Function = function():Object { return new Dictionary() };
+			
+			var factory:FluentAsFactory = new FluentAsFactory();
+			factory.inScope("nonDefaultScope").register(callback).asType(Object).asSingleton();
+			var factory2:FluentAsFactory = new FluentAsFactory();
+			factory2.register(callback).asType(Dictionary).asSingleton();
+			
+			var objInstance:Object = factory.fromScope("nonDefaultScope").resolve(Object);
+			var dictInstance:Object = factory2.resolve(Dictionary);
+			
+			assertSame(objInstance, dictInstance);
+		}
 	}
 }
