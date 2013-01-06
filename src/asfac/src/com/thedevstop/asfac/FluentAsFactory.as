@@ -1,7 +1,7 @@
 package com.thedevstop.asfac 
 {
 	/**
-	 * Use AsFactory to register and resolve depedencies in a fluent manner
+	 * AsFactory wrapped in a fluent interface.
 	 */
 	public class FluentAsFactory implements IRegisterInScope, IResolveFromScope
 	{	
@@ -10,7 +10,7 @@ package com.thedevstop.asfac
 		private var _resolver:FluentResolver;
 		
 		/**
-		 * Constructs a new FluentAsFactory
+		 * Constructs a new FluentAsFactory.
 		 * @param	factory The AsFactory that is used by the fluent interface.
 		 */
 		public function FluentAsFactory(factory:AsFactory = null)
@@ -31,7 +31,7 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Register a dependency in a specific scope
+		 * Register a dependency in a specific scope.
 		 * @param	scopeName The name of the scope.
 		 * @return The ability to register in the scope.
 		 */

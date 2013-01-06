@@ -1,8 +1,7 @@
 package com.thedevstop.asfac 
 {
 	/**
-	 * ...
-	 * @author 
+	 * Allows the type being resolved to come from a specified scope.
 	 */
 	public interface IResolveFromScope 
 	{

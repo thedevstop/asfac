@@ -1,8 +1,7 @@
 package com.thedevstop.asfac 
 {
 	/**
-	 * ...
-	 * @author 
+	 * Handles the registration of Types for the FluentAsFactory.
 	 */
 	public class FluentRegistrar implements IRegister, IRegisterAsType, IRegisterAsSingleton, IRegisterInScope
 	{
@@ -30,7 +29,7 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Register a dependency in a specific scope
+		 * Register a dependency in a specific scope.
 		 * @param	scopeName The name of the scope.
 		 * @return The ability to register in the scope.
 		 */
@@ -65,6 +64,9 @@ package com.thedevstop.asfac
 			updateRegistration();
 		}
 		
+		/**
+		 * Registers the Type into the AsFactory instance.
+		 */
 		private function updateRegistration():void
 		{
 			_factory.register(_instance, _type, _scopeName, _asSingleton);

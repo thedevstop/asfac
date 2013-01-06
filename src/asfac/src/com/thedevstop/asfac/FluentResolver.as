@@ -1,8 +1,7 @@
 package com.thedevstop.asfac 
 {
 	/**
-	 * ...
-	 * @author 
+	 * Handles the resolution of types for the FluentAsFactory. 
 	 */
 	public class FluentResolver implements IResolve, IResolveFromScope
 	{
