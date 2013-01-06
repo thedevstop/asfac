@@ -2,8 +2,7 @@ package com.thedevstop.asfac
 {
 	
 	/**
-	 * ...
-	 * @author 
+	 * Allows the type being registered to be within a specified scope.
 	 */
 	public interface IRegisterInScope
 	{
@@ -15,7 +14,7 @@ package com.thedevstop.asfac
 		function register(instance:*):IRegisterAsType
 		
 		/**
-		 * Register a dependency in a specific scope
+		 * Register a dependency in a specific scope.
 		 * @param	scopeName The name of the scope.
 		 * @return The ability to register in the scope.
 		 */

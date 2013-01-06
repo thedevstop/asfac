@@ -8,7 +8,7 @@ package com.thedevstop.asfac
 		private static var _instance:FluentAsFactory = null;
 		
 		/**
-		 * Common instance of a FluentAsFactory
+		 * Common instance of a FluentAsFactory.
 		 */
 		static public function get factory():FluentAsFactory
 		{

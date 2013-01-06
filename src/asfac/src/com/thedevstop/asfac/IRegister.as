@@ -1,8 +1,7 @@
 package com.thedevstop.asfac 
 {
 	/**
-	 * ...
-	 * @author 
+	 * Starts the fluent registration process.
 	 */
 	public interface IRegister 
 	{

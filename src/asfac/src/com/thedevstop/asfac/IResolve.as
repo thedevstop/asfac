@@ -1,8 +1,7 @@
 package com.thedevstop.asfac 
 {
 	/**
-	 * ...
-	 * @author 
+	 * Ends the fluent resolution process.
 	 */
 	public interface IResolve 
 	{

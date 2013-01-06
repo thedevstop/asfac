@@ -7,7 +7,7 @@ package com.thedevstop.asfac
 	import flash.utils.getDefinitionByName;
 	
 	/**
-	 * The default AsFactory allows for registering instances, types, or callbacks
+	 * The default AsFactory allows for registering instances, types, or callbacks.
 	 */
 	public class AsFactory
 	{
@@ -17,7 +17,7 @@ package com.thedevstop.asfac
 		private var _descriptions:Dictionary;
 		
 		/**
-		 * Constructs a new AsFactory
+		 * Constructs a new AsFactory.
 		 */
 		public function AsFactory()
 		{
@@ -28,8 +28,8 @@ package com.thedevstop.asfac
 		/**
 		 * Registers a way of resolving a dependency when requested.
 		 * @param	instance How the dependency should be resolved. It can be either a Type, Instance, or Callback function.
-		 * @param	type the target type for which the instance should be returned at resolution time
-		 * @param	scopeName the named scope for the registration
+		 * @param	type The target type for which the instance should be returned at resolution time.
+		 * @param	scopeName The named scope for the registration.
 		 * @param	asSingleton If true, the resolved dependency will be cached and returned each time the type is resolved.
 		 */
 		public function register(instance:*, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void
@@ -43,10 +43,10 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Registers a concrete instance to be returned whenever the target type is requested
-		 * @param	instance the concrete instance to be returned
-		 * @param	type the target type for which the instance should be returned at resolution time
-		 * @param scopeName the named scope for the registration
+		 * Registers a concrete instance to be returned whenever the target type is requested.
+		 * @param	instance The concrete instance to be returned.
+		 * @param	type The target type for which the instance should be returned at resolution time.
+		 * @param scopeName The named scope for the registration.
 		 */
 		private function registerInstance(instance:Object, type:Class, scopeName:String = DefaultScopeName):void
 		{
@@ -59,11 +59,11 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Registers a type to be returned whenever the target type is requested
-		 * @param	instanceType the type to construct at resolution time
-		 * @param	type the type being requested
+		 * Registers a type to be returned whenever the target type is requested.
+		 * @param	instanceType The type to construct at resolution time.
+		 * @param	type The type being requested.
 		 * @param	asSingleton If true, only one instance will be created and returned on each request. If false (default), a new instance
-		 * is created and returned at each resolution request
+		 * is created and returned at each resolution request.
 		 */
 		private function registerType(instanceType:Class, type:Class, scopeName:String=DefaultScopeName, asSingleton:Boolean=false):void 
 		{
@@ -77,10 +77,10 @@ package com.thedevstop.asfac
 		
 		/**
 		 * Registers a callback to be executed, the result of which is returned whenever the target type is requested
-		 * @param	callback the callback to execute
-		 * @param	type the type being requested
+		 * @param	callback The callback to execute.
+		 * @param	type The type being requested.
 		 * @param	asSingleton If true, callback is only invoked once and the result is returned on each request. If false (default), 
-		 * callback is invoked on each resolution request
+		 * callback is invoked on each resolution request.
 		 */
 		private function registerCallback(callback:Function, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void 
 		{
@@ -113,9 +113,9 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Returns an instance for the target type, using prior registrations to fulfill constructor parameters
-		 * @param	type the type being requested
-		 * @return resolved instance
+		 * Returns an instance for the target type, using prior registrations to fulfill constructor parameters.
+		 * @param	type The type being requested.
+		 * @return The resolved instance.
 		 */
 		public function resolve(type:Class, scopeName:String = DefaultScopeName):*
 		{
@@ -133,9 +133,9 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Resolves the desired type using prior registrations
-		 * @param	type the type being requested
-		 * @return the resolved instance
+		 * Resolves the desired type using prior registrations.
+		 * @param	type The type being requested.
+		 * @return The resolved instance.
 		 */
 		private function resolveByClass(type:Class):*
 		{
@@ -155,10 +155,10 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Creates a new instance of the type, using the specified parameters as the constructor parameters
-		 * @param	type the type being created
-		 * @param	parameters the parameters to supply to the constructor
-		 * @return new instance of type
+		 * Creates a new instance of the type, using the specified parameters as the constructor parameters.
+		 * @param	type The type being created.
+		 * @param	parameters The parameters to supply to the constructor.
+		 * @return The new instance of type.
 		 */
 		private function createObject(type:Class, parameters:Array):*
 		{
@@ -185,8 +185,8 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Confirms that a callback is valid for registration. Currently the callback must accept no arguments, or a single AsFactory argument
-		 * @param	callback the callback being tested
+		 * Confirms that a callback is valid for registration. Currently the callback must accept no arguments, or a single AsFactory argument.
+		 * @param	callback The callback being tested.
 		 */
 		private function validateCallback(callback:Function):void
 		{
@@ -196,9 +196,9 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Gets the class description for the type
-		 * @param	type The class to be described
-		 * @return An object of constructor types and injectable properties
+		 * Gets the class description for the type.
+		 * @param	type The class to be described.
+		 * @return An object of constructor types and injectable properties.
 		 */
 		private function getTypeDescription(type:Class):Object
 		{
@@ -211,7 +211,7 @@ package com.thedevstop.asfac
 		/**
 		 * Builds an optimized description of the type.
 		 * @param	type The type to be described.
-		 * @return An optimized description of the constructor and injectable properties
+		 * @return An optimized description of the constructor and injectable properties.
 		 */
 		private function buildTypeDescription(type:Class):Object
 		{
@@ -244,9 +244,9 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Determines whether the accessor should be injected 
-		 * @param	accessor An accessor node from a class description xml
-		 * @return true is the Inject metadata is present, otherwise false
+		 * Determines whether the accessor should be injected.
+		 * @param	accessor An accessor node from a class description xml.
+		 * @return True if the Inject metadata is present, otherwise false.
 		 */
 		private function shouldInjectAccessor(accessor:XML):Boolean
 		{				
@@ -264,9 +264,9 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Resolves the non-optional parameters for a constructor
-		 * @param	typeDescription The optimized description of the type
-		 * @return An array of objects to use as constructor arguments
+		 * Resolves the non-optional parameters for a constructor.
+		 * @param	typeDescription The optimized description of the type.
+		 * @return An array of objects to use as constructor arguments.
 		 */
 		private function resolveConstructorParameters(typeDescription:Object):Array
 		{
@@ -279,9 +279,9 @@ package com.thedevstop.asfac
 		}
 		
 		/**
-		 * Resolves the properties on the instance object that are marked 'Inject'
-		 * @param	instance The object to be inspected
-		 * @param	typeDescription The optimized description of the type
+		 * Resolves the properties on the instance object that are marked 'Inject'.
+		 * @param	instance The object to be inspected.
+		 * @param	typeDescription The optimized description of the type.
 		 */
 		private function injectProperties(instance:Object, typeDescription:Object):void
 		{
