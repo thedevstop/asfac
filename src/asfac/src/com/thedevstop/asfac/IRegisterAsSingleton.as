@@ -1,8 +1,7 @@
 package com.thedevstop.asfac 
 {
 	/**
-	 * ...
-	 * @author 
+	 * Allows the type being registered to be a singleton instance.
 	 */
 	public interface IRegisterAsSingleton
 	{

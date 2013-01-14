@@ -5,18 +5,33 @@ A simple, fast IOC container for use in ActionScript projects.
 
 **Getting Started**
 
-In it's simplest form _asfac_ is contained in a single file AsFactory.as. You can simply copy this file into your project to get started. 
+In it's simplest form _asfac_ is contained in a single file, _AsFactory.as_. You can simply copy this file into your project to get started.
 
-Those looking for a fluent registration interface can copy the entire contents of the asfac folder.
+You can then perform registration and resolution as follows
 
-**Accessing AsFactory Globally**
+    var asFactory:AsFactory = new AsFactory();
+    asFactory.register(StandardGreeter, ISayHello);
+    var greeter:ISayHello = asFactory.resolve(ISayHello);
 
-Included are a locator classes for both the regular and fluent versions of AsFactory.
+
+**Accessing A Common AsFactory From Separate Components**
+
+Obviously, your application components should not create new instances of _AsFactory_, as they would not have prior registrations. You can make the _AsFactory_ available to application components in a variety of ways, but for the sake of getting you off the ground quickly, a locator class is provided.
+
+Simply use the following instance for out of the box management of a global _AsFactory_ for use across your application.
 
     AsFactoryLocator.factory
-	FluentAsFactoryLocator.factory
 
-The factory property provides access to a single instance of AsFactory. The fluent factory instance will use the regular factory instance internally for registration and resolution.
+***
+
+**Fluent Interface**
+
+Those looking for a fluent registration interface can copy the entire contents of the asfac folder. Upon doing so, you also gain access to a _FluentAsFactoryLocator_ which uses the standard _AsFactory_ internally.
+
+    FluentAsFactoryLocator.factory
+
+***
+
 
 **Property Injection**
 
@@ -29,108 +44,68 @@ Since the Inject metadata is not recognized out of the box you must add the foll
 
     -keep-as3-metadata+=Inject
 
-**AsFactory Examples**
+***
 
-Register type for interface.
+**Show Me The Code!**
 
-    var factory:AsFactory = new AsFactory();
-    factory.registerType(InMemoryUserRepository, IUserRepository);
-    
+To register a type for an interface (new instance per request)
+
+    // Standard
+    factory.register(InMemoryUserRepository, IUserRepository);    
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
-Register type for instance as singleton.
-
-    var factory:AsFactory = new AsFactory();
-    factory.registerType(InMemoryUserRepository, IUserRepository, true);
-    
+    // Fluent
+    factory.register(InMemoryUserRepository).asType(IUserRepository);
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
-    
-Register type for instance with a named scope.
 
-    var factory:AsFactory = new AsFactory();
-    factory.registerType(InMemoryUserRepository, IUserRepository, "memory", true);
+Register type for instance (singleton instance on each request)
     
+    // Standard
+    factory.register(InMemoryUserRepository, IUserRepository, true);
+    var userRepository:IUserRepository = factory.resolve(IUserRepository);
+
+    // Fluent
+    factory.register(InMemoryUserRepository).asType(IUserRepository).asSingleton();
+    var userRepository:IUserRepository = factory.resolve(IUserRepository);
+
+Register type for instance with a named scope
+
+    // Standard
+    factory.register(InMemoryUserRepository, IUserRepository, "memory", true);    
     var userRepository:IUserRepository = factory.resolve(IUserRepository, "memory");
 
-Register instance for interface.
-
-    var factory:AsFactory = new AsFactory();
-    factory.registerInstance(new InMemoryUserRepository(), IUserRepository);
-    
-    var userRepository:IUserRepository = factory.resolve(IUserRepository);
-
-Register callback for type.
-
-    var factory:AsFactory = new AsFactory();
-	var callback:Function = function():Object { return new InMemoryUserRepository(); };	
-    factory.registerCallback(callback, IUserRepository, true);
-    
-    var userRepository:IUserRepository = factory.resolve(IUserRepository);
-
-Resovle type with property injection.
-
-	public class ApplicationContext
-	{
-		private var _users:IUserRepository;
-		
-		[Inject]
-		public function set users(repo:IUserRepository):void
-		{
-			_users = repo;
-		}
-		
-		public function get users():IUserRepository
-		{
-			return _users;
-		}
-	}
-	
-	...
-	
-    var factory:AsFactory = new AsFactory();
-    factory.registerType(InMemoryUserRepository, IUserRepository, true);
-    
-    var context:ApplicationContext = factory.resolve(ApplicationContext);
-
-**FluentAsFactory Examples**
-
-Register type for interface.
-
-    var factory:FluentAsFactory = new FluentAsFactory();
-    factory.register(InMemoryUserRepository).asType(IUserRepository);
-    
-    var userRepository:IUserRepository = factory.resolve(IUserRepository);
-
-Register type for instance as singleton.
-
-    var factory:FluentAsFactory = new FluentAsFactory();
-    factory.register(InMemoryUserRepository).asType(IUserRepository).asSingleton();
-    
-    var userRepository:IUserRepository = factory.resolve(IUserRepository);
-    
-Register type for instance with a named scope.
-
-    var factory:FluentAsFactory = new FluentAsFactory();
+    // Fluent
     factory.inScope("memory").register(InMemoryUserRepository).asType(IUserRepository).asSingleton();
-    
     var userRepository:IUserRepository = factory.fromScope("memory").resolve(IUserRepository);
 
-Register instance for interface.
+Register an instance for interface
 
-    var factory:FluentAsFactory = new FluentAsFactory();
-    factory.register(new InMemoryUserRepository()).asType(IUserRepository);
-    
+    // Standard
+    factory.register(new InMemoryUserRepository(), IUserRepository);    
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
-Register callback for type.
-
-    var factory:FluentAsFactory = new FluentAsFactory();
-	var callback:Function = function():Object { return new InMemoryUserRepository(); };	
-    factory.register(callback).asType(IUserRepository).asSingleton();
-    
+    // Fluent
+    factory.register(new InMemoryUserRepository()).asType(IUserRepository);    
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
-Resovle type with property injection.
+Register callback for type
+
+    var buildMyRepository:Function = function(factory:AsFactory, scopeName:String):Object { 
+        // ... (build your instance however is appropriate)
+        // ... (note that the factory and scope are provided for your use)
+    };
+
+    ...
+
+    // Standard
+    factory.register(buildMyRepository, IUserRepository);
+    var userRepository:IUserRepository = factory.resolve(IUserRepository);
+    
+    // Fluent
+    factory.register(buildMyRepository).asType(IUserRepository);
+    var userRepository:IUserRepository = factory.resolve(IUserRepository);
+
+Resovle type with property injection
 
 	public class ApplicationContext
 	{
@@ -150,9 +125,12 @@ Resovle type with property injection.
 	
 	...
 	
-    var factory:FluentAsFactory = new FluentAsFactory();
-    factory.register(InMemoryUserRepository).asType(IUserRepository).asSingleton();
-    
+    // Standard
+    factory.register(InMemoryUserRepository, IUserRepository);
+    var context:ApplicationContext = factory.resolve(ApplicationContext);
+
+    // Fluent
+    factory.register(InMemoryUserRepository).asType(IUserRepository);    
     var context:ApplicationContext = factory.resolve(ApplicationContext);
 
 **License**

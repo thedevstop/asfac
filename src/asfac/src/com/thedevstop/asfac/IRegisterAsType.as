@@ -1,8 +1,7 @@
 package com.thedevstop.asfac 
 {	
 	/**
-	 * ...
-	 * @author 
+	 * Allows the specification of the Type being registered.
 	 */
 	public interface IRegisterAsType
 	{
