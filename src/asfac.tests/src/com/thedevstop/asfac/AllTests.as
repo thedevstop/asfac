@@ -1,22 +1,23 @@
 package com.thedevstop.asfac 
 {
+	import asunit.framework.TestCase;
 	import asunit.framework.TestSuite;
+	
 	/**
 	 * ...
-	 * @author David Ruttka
+	 * @author
 	 */
 	public class AllTests extends TestSuite
 	{
-		
 		public function AllTests() 
 		{
 			super();
 			
-			var rt:RegistrationTests = new RegistrationTests();
-			for each(var testName:String in rt.getTestMethods())
-			{
-				addTest(new RegistrationTests(testName));
-			}
+			addTest(new RegistrationTests());
+			addTest(new ResolutionTests());
+			addTest(new FluentRegistrationTests());
+			addTest(new FluentResolutionTests());
+			addTest(new PerformanceTests());
 		}
 	}
 }

@@ -1,17 +1,16 @@
 package com.thedevstop.asfac 
 {
-	import adobe.utils.CustomActions;
 	import asunit.framework.TestCase;
-	import asunit.framework.TestSuite;
-	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
+	import com.thedevstop.asfac.stubs.HasObjectProperty;
+	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
+	
 	/**
 	 * ...
-	 * @author David Ruttka
+	 * @author 
 	 */
 	public class RegistrationTests extends TestCase
 	{
-		
 		public function RegistrationTests(testMethod:String = null) 
 		{
 			super(testMethod);
@@ -21,8 +20,8 @@ package com.thedevstop.asfac
 		 * Should be able to register in the following ways
 		 * 
 		 * DONE register a concrete instance as a type, so this instance is returned whenever that type is requested
-		 * register a type as a type, so that a new instance of that type is returned whenever requested
-		 * register a callback as a type, so that the result of the callback is returned whenever requested
+		 * DONE register a type as a type, so that a new instance of that type is returned whenever requested
+		 * DONE register a callback as a type, so that the result of the callback is returned whenever requested
 		 * 
 		 * Scoping
 		 * 
@@ -41,7 +40,7 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var instance:Object = { foo:"bar" };
-			factory.registerInstance(instance, Object);
+			factory.register(instance, Object);
 			
 			var result:Object = factory.resolve(Object);
 			assertSame(instance, result);
@@ -51,38 +50,10 @@ package com.thedevstop.asfac
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			factory.registerType(Dictionary, Dictionary);
+			factory.register(Dictionary, Dictionary);
 			
 			var result:Object = factory.resolve(Dictionary);
-			assertTrue(result.constructor === Dictionary);
-		}
-		
-		public function test_should_resolve_types_with_required_constructor_parameters():void
-		{
-			var factory:AsFactory = new AsFactory();
-			
-			factory.registerType(ConstructorWithRequiredParameters, ConstructorWithRequiredParameters);
-			
-			var result:Object = factory.resolve(ConstructorWithRequiredParameters);
-			assertTrue(result.constructor === ConstructorWithRequiredParameters);
-		}
-		
-		public function test_should_attempt_to_resolve_unregistered_types():void
-		{
-			var factory:AsFactory = new AsFactory();
-			
-			var result:Object = factory.resolve(Dictionary);
-			assertTrue(result is Dictionary);
-		}
-		
-		public function test_should_resolve_types_with_only_optional_constructor_parameters():void
-		{
-			var factory:AsFactory = new AsFactory();
-			
-			factory.registerType(Dictionary, Dictionary);
-			
-			var result:Object = factory.resolve(Dictionary);
-			assertTrue(result is Dictionary);			
+			assertTrue(result.constructor == Dictionary);
 		}
 		
 		public function test_should_allow_register_callback():void
@@ -90,22 +61,99 @@ package com.thedevstop.asfac
 			var factory:AsFactory = new AsFactory();
 			
 			var source:Array = [1, 2, 3];
-			factory.registerCallback(function():Array { return source; }, Array);
+			factory.register(function():Array { return source; }, Array);
 			
 			var result:Array = factory.resolve(Array);
 			assertSame(source, result);			
 		}
 		
-		public function test_resolving_constructor_params_should_use_registered_instances():void
+		public function test_should_error_when_registering_callback_with_too_many_arguments():void
 		{
 			var factory:AsFactory = new AsFactory();
 			
-			var instance:Dictionary = new Dictionary();
-			instance["foo"] = "bar";
-			factory.registerInstance(instance, Dictionary);
+			var registerFunc:Function = function():void
+			{
+				factory.register(function(asFactory:AsFactory, name:String, num:Number):Array { return [1, 2, 3]; }, Array);
+			};
 			
-			var result:ConstructorWithRequiredParameters = factory.resolve(ConstructorWithRequiredParameters);
-			assertSame(instance, result.dictionary);
+			assertThrows(IllegalOperationError, registerFunc);
+		}
+		
+		public function test_should_allow_register_callback_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.register(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, true);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertSame(result1, result2);
+		}
+		
+		public function test_should_allow_register_type_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.register(Dictionary, Dictionary, AsFactory.DefaultScopeName, true);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertSame(result1, result2);
+		}
+		
+		public function test_should_retun_new_instances_when_not_registered_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.register(Dictionary, Dictionary, AsFactory.DefaultScopeName, false);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertNotSame(result1, result2);
+		}
+		
+		public function test_callbacks_should_allow_register_type_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.register(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, true);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertSame(result1, result2);
+		}
+		
+		public function test_callbacks_should_retun_new_instances_when_not_registered_as_singleton():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.register(function():Dictionary { return new Dictionary(); }, Dictionary, AsFactory.DefaultScopeName, false);
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertNotSame(result1, result2);
+		}
+		
+		public function test_should_error_when_registering_type_is_null():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var registerFunc:Function = function():void
+			{
+				factory.register(Dictionary, null);
+			};
+			
+			assertThrows(IllegalOperationError, registerFunc);			
+		}
+		
+		public function test_should_be_able_register_null_as_an_instance_value():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			factory.register(null, Dictionary);
+			var instance:Dictionary = factory.resolve(Dictionary);
+			
+			assertNull(instance);			
 		}
 	}
 }
