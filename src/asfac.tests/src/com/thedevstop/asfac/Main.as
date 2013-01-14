@@ -6,16 +6,15 @@ package com.thedevstop.asfac
 	
 	/**
 	 * ...
-	 * @author David Ruttka
+	 * @author
 	 */
 	public class Main extends Sprite
 	{
 		public function Main():void
 		{
-			var unittests:TestRunner = new TestRunner();
-			stage.addChild(unittests);
-			unittests.start(AllTests, null, TestRunner.SHOW_TRACE);
+			var testRunner:TestRunner = new TestRunner();
+			stage.addChild(testRunner);
+			testRunner.start(AllTests, null, TestRunner.SHOW_TRACE);
 		}
 	}
-
 }
