@@ -61,7 +61,7 @@ To register a type for an interface (new instance per request)
 Register type for instance (singleton instance on each request)
     
     // Standard
-    factory.register(InMemoryUserRepository, IUserRepository, true);
+    factory.register(InMemoryUserRepository, IUserRepository, AsFactory.DefaultScopeName, true);
     var userRepository:IUserRepository = factory.resolve(IUserRepository);
 
     // Fluent
