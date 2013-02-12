@@ -115,11 +115,11 @@ package com.thedevstop.asfac
 		/**
 		 * Returns an instance for the target type, using prior registrations to fulfill constructor parameters.
 		 * @param	type The type being requested.
-		 * @param	scopeName 
-		 * @param 	useDefaultFallback
+		 * @param	scopeName The name of the scope being resolved from.
+		 * @param 	useDefaultAsFallback Whether to use the DefaultScope as a fallback when registration not found in specified scope.
 		 * @return The resolved instance.
 		 */
-		public function resolve(type:Class, scopeName:String = DefaultScopeName, useDefaultFallback:Boolean=false):*
+		public function resolve(type:Class, scopeName:String = DefaultScopeName, useDefaultAsFallback:Boolean=false):*
 		{
 			var registrationsByScope:Dictionary = _registrations[type];
 			
@@ -129,7 +129,7 @@ package com.thedevstop.asfac
 					return registrationsByScope[scopeName](this, scopeName);
 				else if (scopeName != DefaultScopeName)
 				{
-					if (useDefaultFallback)
+					if (useDefaultAsFallback)
 						return resolve(type);
 					else
 						throw new ArgumentError("Type being resolved has not been registered for scope named " + scopeName);
