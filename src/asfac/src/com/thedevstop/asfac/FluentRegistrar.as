@@ -1,5 +1,6 @@
 package com.thedevstop.asfac 
 {
+	import avmplus.getQualifiedClassName;
 	/**
 	 * Handles the registration of Types for the FluentAsFactory.
 	 */
@@ -8,7 +9,7 @@ package com.thedevstop.asfac
 		private var _factory:AsFactory;
 		private var _instance:*;
 		private var _type:Class;
-		private var _scopeName:String = AsFactory.DefaultScopeName;
+		private var _scope:* = AsFactory.DefaultScopeName;
 		private var _asSingleton:Boolean = false;
 		
 		public function FluentRegistrar(factory:AsFactory)
@@ -30,12 +31,12 @@ package com.thedevstop.asfac
 		
 		/**
 		 * Register a dependency in a specific scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to register in the scope.
 		 */
-		public function inScope(scopeName:String):IRegister
+		public function inScope(scope:*):IRegister
 		{
-			_scopeName = scopeName;
+			_scope = scope;
 			
 			return this;
 		}
@@ -69,7 +70,7 @@ package com.thedevstop.asfac
 		 */
 		private function updateRegistration():void
 		{
-			_factory.register(_instance, _type, _scopeName, _asSingleton);
+			_factory.register(_instance, _type, _scope, _asSingleton);
 		}
 	}
 }

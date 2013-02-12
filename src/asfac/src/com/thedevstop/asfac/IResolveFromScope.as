@@ -7,15 +7,15 @@ package com.thedevstop.asfac
 	{
 		/**
 		 * Resolve a dependency from the default scope.
-		 * @param	type The type of dependency to resolve.
-		 * @return An instance of the type.
+		 * @param	scope The name or Class of the scope.
+		 * @return	An instance of the type.
 		 */
-		function fromScope(scopeName:String):IResolve
+		function fromScope(scope:*):IResolve
 		
 		/**
 		 * Resolve a dependency from a specifc scope.
-		 * @param	scopeName The name of the scope.
-		 * @return The ability to resolve from this scope.
+		 * @param	type The type of dependency to resolve. 
+		 * @return	The ability to resolve from this scope.
 		 */
 		function resolve(type:Class):*
 	}	

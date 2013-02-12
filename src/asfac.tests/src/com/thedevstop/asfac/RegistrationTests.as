@@ -155,5 +155,26 @@ package com.thedevstop.asfac
 			
 			assertNull(instance);			
 		}
+		
+		public function test_should_be_able_to_use_class_as_registration_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+
+			factory.register(Dictionary, Dictionary, Object);
+			var result:Object = factory.resolve(Dictionary, Object);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_should_be_able_to_use_class_instance_as_registration_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj:Object = { };
+
+			factory.register(Dictionary, Dictionary, obj);
+			var result:Object = factory.resolve(Dictionary, obj);
+
+			assertTrue(result.constructor == Dictionary);
+		}
 	}
 }

@@ -29,11 +29,15 @@ package com.thedevstop.asfac
 		 * Registers a way of resolving a dependency when requested.
 		 * @param	instance How the dependency should be resolved. It can be either a Type, Instance, or Callback function.
 		 * @param	type The target type for which the instance should be returned at resolution time.
-		 * @param	scopeName The named scope for the registration.
+		 * @param	scope The named string or Class scope for the registration.
 		 * @param	asSingleton If true, the resolved dependency will be cached and returned each time the type is resolved.
 		 */
-		public function register(instance:*, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void
+		public function register(instance:*, type:Class, scope:* = DefaultScopeName, asSingleton:Boolean=false):void
 		{
+			var scopeName:String = scope is String 
+				? scope
+				: getQualifiedClassName(scope);
+
 			if (instance is Class)
 				registerType(instance, type, scopeName, asSingleton);
 			else if (instance is Function)
@@ -115,12 +119,17 @@ package com.thedevstop.asfac
 		/**
 		 * Returns an instance for the target type, using prior registrations to fulfill constructor parameters.
 		 * @param	type The type being requested.
-		 * @return The resolved instance.
+		 * @param	scope The name or Class scope
+		 * @return	The resolved instance.
 		 */
-		public function resolve(type:Class, scopeName:String = DefaultScopeName):*
+		public function resolve(type:Class, scope:* = DefaultScopeName):*
 		{
 			var registrationsByScope:Dictionary = _registrations[type];
 			
+			var scopeName:String = scope is String 
+				? scope
+				: getQualifiedClassName(scope);
+
 			if (registrationsByScope)
 			{
 				if (registrationsByScope[scopeName])

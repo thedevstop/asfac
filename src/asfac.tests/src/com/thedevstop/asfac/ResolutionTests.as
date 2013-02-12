@@ -117,6 +117,17 @@ package com.thedevstop.asfac
 			assertSame(instance, obj);
 		}
 		
+		public function test_should_resolve_type_with_class_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var obj:Object = { numbers:[1, 2, 3] };
+			factory.register(obj, Object, HasObjectProperty);
+			
+			var instance:Object = factory.resolve(Object, HasObjectProperty);
+			assertSame(instance, obj);
+		}
+		
 		public function test_should_resolve_default_scope_if_registered():void
 		{
 			var factory:AsFactory = new AsFactory();
@@ -219,6 +230,28 @@ package com.thedevstop.asfac
 			var instance:Dictionary = factory.resolve(Dictionary);
 			
 			assertSame(instance, instanceDictionary);
+		}
+		
+		public function test_should_resolve_from_class_instance_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj:Object = { };
+
+			factory.register(Dictionary, Dictionary, Object);
+			var result:Object = factory.resolve(Dictionary, obj);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_should_resolve_from_class_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj:Object = { };
+
+			factory.register(Dictionary, Dictionary, obj);
+			var result:Object = factory.resolve(Dictionary, Object);
+
+			assertTrue(result.constructor == Dictionary);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.thedevstop.asfac 
 {
+	import avmplus.getQualifiedClassName;
 	/**
 	 * AsFactory wrapped in a fluent interface.
 	 */
@@ -32,22 +33,28 @@ package com.thedevstop.asfac
 		
 		/**
 		 * Register a dependency in a specific scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to register in the scope.
 		 */
-		public function inScope(scopeName:String):IRegister
+		public function inScope(scope:*):IRegister
 		{
-			return _registrar.inScope(scopeName);
+			if (scope is Class)
+				return _registrar.inScope(getQualifiedClassName(scope));
+				
+			return _registrar.inScope(scope);
 		}
 		
 		/**
 		 * Resolve a dependency from a specifc scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to resolve from this scope.
 		 */
-		public function fromScope(scopeName:String):IResolve
+		public function fromScope(scope:*):IResolve
 		{
-			return _resolver.fromScope(scopeName);
+			if (scope is Class)
+				return _resolver.fromScope(getQualifiedClassName(scope));
+			
+			return _resolver.fromScope(scope);
 		}
 		
 		/**
