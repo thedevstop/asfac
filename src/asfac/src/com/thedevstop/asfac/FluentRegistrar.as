@@ -9,7 +9,7 @@ package com.thedevstop.asfac
 		private var _factory:AsFactory;
 		private var _instance:*;
 		private var _type:Class;
-		private var _scopeName:String = AsFactory.DefaultScopeName;
+		private var _scope:* = AsFactory.DefaultScopeName;
 		private var _asSingleton:Boolean = false;
 		
 		public function FluentRegistrar(factory:AsFactory)
@@ -36,7 +36,7 @@ package com.thedevstop.asfac
 		 */
 		public function inScope(scope:*):IRegister
 		{
-			_scopeName = scope is Class ? getQualifiedClassName(scope) : scope;
+			_scope = scope;
 			
 			return this;
 		}
@@ -70,7 +70,7 @@ package com.thedevstop.asfac
 		 */
 		private function updateRegistration():void
 		{
-			_factory.register(_instance, _type, _scopeName, _asSingleton);
+			_factory.register(_instance, _type, _scope, _asSingleton);
 		}
 	}
 }

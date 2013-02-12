@@ -153,5 +153,26 @@ package com.thedevstop.asfac
 			
 			assertSame(instance, singletonDictionary);	
 		}
+		
+		public function test_should_be_able_to_use_class_as_registration_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+
+			factory.inScope(Object).register(Dictionary).asType(Dictionary);
+			var result:Object = factory.fromScope(Object).resolve(Dictionary);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_should_be_able_to_use_class_instance_as_registration_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var obj:Object = { };
+
+			factory.inScope(obj).register(Dictionary).asType(Dictionary);
+			var result:Object = factory.fromScope(obj).resolve(Dictionary);
+
+			assertTrue(result.constructor == Dictionary);
+		}
 	}
 }

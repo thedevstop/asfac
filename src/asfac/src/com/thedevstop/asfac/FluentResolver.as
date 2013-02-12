@@ -7,7 +7,7 @@ package com.thedevstop.asfac
 	public class FluentResolver implements IResolve, IResolveFromScope
 	{
 		private var _factory:AsFactory;
-		private var _scopeName:String = AsFactory.DefaultScopeName;
+		private var _scope:* = AsFactory.DefaultScopeName;
 		
 		public function FluentResolver(factory:AsFactory) 
 		{
@@ -21,7 +21,7 @@ package com.thedevstop.asfac
 		 */
 		public function resolve(type:Class):*
 		{
-			return _factory.resolve(type, _scopeName);
+			return _factory.resolve(type, _scope);
 		}
 		
 		/**
@@ -31,7 +31,7 @@ package com.thedevstop.asfac
 		 */
 		public function fromScope(scope:*):IResolve
 		{
-			_scopeName = scope is Class ? getQualifiedClassName(scope) : scope;
+			_scope = scope;
 			
 			return this;
 		}

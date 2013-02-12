@@ -34,8 +34,10 @@ package com.thedevstop.asfac
 		 */
 		public function register(instance:*, type:Class, scope:* = DefaultScopeName, asSingleton:Boolean=false):void
 		{
-			var scopeName:String = scope is Class ? getQualifiedClassName(scope) : scope;
-			
+			var scopeName:String = scope is Class 
+				? getQualifiedClassName(scope)
+				: scope is String ? scope : getQualifiedClassName(scope.constructor);
+
 			if (instance is Class)
 				registerType(instance, type, scopeName, asSingleton);
 			else if (instance is Function)
@@ -123,8 +125,11 @@ package com.thedevstop.asfac
 		public function resolve(type:Class, scope:* = DefaultScopeName):*
 		{
 			var registrationsByScope:Dictionary = _registrations[type];
-			var scopeName:String = scope is Class ? getQualifiedClassName(scope) : scope;
 			
+			var scopeName:String = scope is Class 
+				? getQualifiedClassName(scope)
+				: scope is String ? scope : getQualifiedClassName(scope.constructor);
+
 			if (registrationsByScope)
 			{
 				if (registrationsByScope[scopeName])

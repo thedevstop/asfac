@@ -231,5 +231,27 @@ package com.thedevstop.asfac
 			
 			assertSame(instance, instanceDictionary);
 		}
+		
+		public function test_should_resolve_from_class_instance_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj:Object = { };
+
+			factory.register(Dictionary, Dictionary, Object);
+			var result:Object = factory.resolve(Dictionary, obj);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_should_resolve_from_class_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj:Object = { };
+
+			factory.register(Dictionary, Dictionary, obj);
+			var result:Object = factory.resolve(Dictionary, Object);
+
+			assertTrue(result.constructor == Dictionary);
+		}
 	}
 }

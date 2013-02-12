@@ -119,18 +119,6 @@ package com.thedevstop.asfac
 			assertSame(instance, obj);
 		}
 		
-		public function test_should_resolve_type_with_class_scope():void
-		{
-			var factory:FluentAsFactory = new FluentAsFactory();
-			
-			var obj:Object = { numbers:[1, 2, 3] };
-			
-			factory.inScope(HasObjectProperty).register(obj).asType(Object);
-			
-			var instance:Object = factory.fromScope(HasObjectProperty).resolve(Object);
-			assertSame(instance, obj);
-		}
-		
 		public function test_should_resolve_default_scope_if_registered():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
@@ -244,6 +232,28 @@ package com.thedevstop.asfac
 			var instance:Dictionary = FluentAsFactoryLocator.factory.resolve(Dictionary);
 			
 			assertSame(instance, singletonDictionary);	
+		}
+		
+		public function test_should_resolve_from_class_instance_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var obj:Object = { };
+
+			factory.inScope(Object).register(Dictionary).asType(Dictionary);
+			var result:Object = factory.fromScope(obj).resolve(Dictionary);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_should_resolve_from_class_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var obj:Object = { };
+
+			factory.inScope(obj).register(Dictionary).asType(Dictionary);
+			var result:Object = factory.fromScope(Object).resolve(Dictionary);
+
+			assertTrue(result.constructor == Dictionary);
 		}
 	}
 }
