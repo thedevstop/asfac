@@ -34,9 +34,9 @@ package com.thedevstop.asfac
 		 */
 		public function register(instance:*, type:Class, scope:* = DefaultScopeName, asSingleton:Boolean=false):void
 		{
-			var scopeName:String = scope is Class 
-				? getQualifiedClassName(scope)
-				: scope is String ? scope : getQualifiedClassName(scope.constructor);
+			var scopeName:String = scope is String 
+				? scope
+				: getQualifiedClassName(scope);
 
 			if (instance is Class)
 				registerType(instance, type, scopeName, asSingleton);
@@ -126,9 +126,9 @@ package com.thedevstop.asfac
 		{
 			var registrationsByScope:Dictionary = _registrations[type];
 			
-			var scopeName:String = scope is Class 
-				? getQualifiedClassName(scope)
-				: scope is String ? scope : getQualifiedClassName(scope.constructor);
+			var scopeName:String = scope is String 
+				? scope
+				: getQualifiedClassName(scope);
 
 			if (registrationsByScope)
 			{
