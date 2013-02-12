@@ -78,6 +78,18 @@ Register type for instance with a named scope
     factory.inScope("memory").register(InMemoryUserRepository).asType(IUserRepository).asSingleton();
     var userRepository:IUserRepository = factory.fromScope("memory").resolve(IUserRepository);
 
+Register types for Class scope
+
+You can use the Class object or any instance of the Class as the registration scope.
+
+    // Standard
+    factory.register(InMemoryUserRepository, IRepository, User, false);
+    var repository:IRepository = factory.resolve(IRepository, User);
+
+    // Fluent
+    factory.inScope(User).register(InMemoryUserRepository).asType(IRepository);
+    var repository:IRepository = factory.fromScope(User).resolve(IRepository);
+
 Register an instance for interface
 
     // Standard
