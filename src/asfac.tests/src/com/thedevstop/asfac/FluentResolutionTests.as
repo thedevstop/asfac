@@ -119,6 +119,18 @@ package com.thedevstop.asfac
 			assertSame(instance, obj);
 		}
 		
+		public function test_should_resolve_type_with_class_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			
+			var obj:Object = { numbers:[1, 2, 3] };
+			
+			factory.inScope(HasObjectProperty).register(obj).asType(Object);
+			
+			var instance:Object = factory.fromScope(HasObjectProperty).resolve(Object);
+			assertSame(instance, obj);
+		}
+		
 		public function test_should_resolve_default_scope_if_registered():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();

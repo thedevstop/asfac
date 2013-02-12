@@ -1,5 +1,6 @@
 package com.thedevstop.asfac 
 {
+	import avmplus.getQualifiedClassName;
 	/**
 	 * Handles the registration of Types for the FluentAsFactory.
 	 */
@@ -30,12 +31,12 @@ package com.thedevstop.asfac
 		
 		/**
 		 * Register a dependency in a specific scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to register in the scope.
 		 */
-		public function inScope(scopeName:String):IRegister
+		public function inScope(scope:*):IRegister
 		{
-			_scopeName = scopeName;
+			_scopeName = scope is Class ? getQualifiedClassName(scope) : scope;
 			
 			return this;
 		}

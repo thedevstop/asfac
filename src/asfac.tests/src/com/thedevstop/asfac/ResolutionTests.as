@@ -117,6 +117,17 @@ package com.thedevstop.asfac
 			assertSame(instance, obj);
 		}
 		
+		public function test_should_resolve_type_with_class_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var obj:Object = { numbers:[1, 2, 3] };
+			factory.register(obj, Object, HasObjectProperty);
+			
+			var instance:Object = factory.resolve(Object, HasObjectProperty);
+			assertSame(instance, obj);
+		}
+		
 		public function test_should_resolve_default_scope_if_registered():void
 		{
 			var factory:AsFactory = new AsFactory();

@@ -1,5 +1,6 @@
 package com.thedevstop.asfac 
 {
+	import avmplus.getQualifiedClassName;
 	/**
 	 * Handles the resolution of types for the FluentAsFactory. 
 	 */
@@ -25,12 +26,12 @@ package com.thedevstop.asfac
 		
 		/**
 		 * Resolve a dependency from a specifc scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to resolve from this scope.
 		 */
-		public function fromScope(scopeName:String):IResolve
+		public function fromScope(scope:*):IResolve
 		{
-			_scopeName = scopeName;
+			_scopeName = scope is Class ? getQualifiedClassName(scope) : scope;
 			
 			return this;
 		}
