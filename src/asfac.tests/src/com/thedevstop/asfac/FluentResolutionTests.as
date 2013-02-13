@@ -1,4 +1,4 @@
-﻿package com.thedevstop.asfac 
+package com.thedevstop.asfac 
 {
 	import adobe.utils.CustomActions;
 	import asunit.framework.TestCase;
@@ -314,6 +314,38 @@
 			var instance:HasObjectProperty = factory.fromScope(scopeName).resolve(HasObjectProperty);
 			
 			assertSame(instance.theObject, defaultDictionary);
+		}
+		public function test_unscoped_resolve_uses_default_scope_after_scoped_resolve():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var defaultItem:Object = { };
+			var scopedItem:Object = new Dictionary();
+			var scopeName:String = "nonDefaultScope";
+			
+			factory.inScope(scopeName).register(scopedItem).asType(Object);
+			factory.register(defaultItem).asType(Object);
+			var ignore:Object = factory.fromScope(scopeName).resolve(Object);
+			var instance:Object = factory.resolve(Object);
+			
+			assertSame(defaultItem, instance);
+		}
+		
+		public function test_scoped_resolver_continues_resolving_from_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var object:Object = { };
+			var dictionary:Dictionary = new Dictionary();
+			var scopeName:String = "nonDefaultScope";
+			
+			factory.inScope(scopeName).register(object).asType(Object);
+			factory.inScope(scopeName).register(dictionary).asType(Dictionary);
+			
+			var scopedResolver:IResolve = factory.fromScope(scopeName);
+			var objectInstance:Object = scopedResolver.resolve(Object);
+			var dictionaryInstance:Dictionary = scopedResolver.resolve(Dictionary);
+			
+			assertSame(objectInstance, object);
+			assertSame(dictionaryInstance, dictionary);
 		}
 	}
 }
