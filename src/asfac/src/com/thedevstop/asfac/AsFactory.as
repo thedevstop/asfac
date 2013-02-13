@@ -1,4 +1,4 @@
-﻿package com.thedevstop.asfac
+package com.thedevstop.asfac
 {
 	import avmplus.getQualifiedClassName;
 	import flash.errors.IllegalOperationError;
@@ -119,11 +119,11 @@
 		/**
 		 * Returns an instance for the target type, using prior registrations to fulfill constructor parameters.
 		 * @param	type The type being requested.
-		 * @param	scopeName The name of the scope being resolved from.
+		 * @param	scope The name or Class of the scope being resolved from.
 		 * @param 	useDefaultAsFallback Whether to use the DefaultScope as a fallback when registration not found in specified scope.
 		 * @return The resolved instance.
 		 */
-		public function resolve(type:Class, scopeName:String = DefaultScopeName, useDefaultAsFallback:Boolean=false):*
+		public function resolve(type:Class, scope:*=DefaultScopeName, useDefaultAsFallback:Boolean=false):*
 		{
 			var registrationsByScope:Dictionary = _registrations[type];
 			
