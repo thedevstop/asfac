@@ -347,5 +347,18 @@ package com.thedevstop.asfac
 			assertSame(objectInstance, object);
 			assertSame(dictionaryInstance, dictionary);
 		}
+		
+		public function test_scoped_resolve_should_fallback_when_specified():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(defaultDictionary).asType(Dictionary);
+			
+			var instance:Dictionary = factory.fromScope(scopeName).resolveWithFallback(Dictionary);
+			
+			assertSame(instance, defaultDictionary);			
+		}
 	}
 }
