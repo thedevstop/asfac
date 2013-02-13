@@ -25,6 +25,16 @@ package com.thedevstop.asfac
 		}
 		
 		/**
+		 * Resolve a dependency using default registrations if necessary.
+		 * @param	type The type of dependency to resolve.
+		 * @return An instance of the type.
+		 */
+		public function resolveWithFallback(type:Class):*
+		{
+			return _factory.resolve(type, _scope, true);
+		}
+		
+		/**
 		 * Resolve a dependency from a specifc scope.
 		 * @param	scope The name or Class of the scope.
 		 * @return The ability to resolve from this scope.
