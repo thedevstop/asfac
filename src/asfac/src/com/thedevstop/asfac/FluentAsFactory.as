@@ -7,8 +7,8 @@ package com.thedevstop.asfac
 	public class FluentAsFactory implements IRegisterInScope, IResolveFromScope
 	{	
 		private var _factory:AsFactory;
-		private var _registrar:FluentRegistrar;
-		private var _resolver:FluentResolver;
+		private var _defaultRegistrar:FluentRegistrar;
+		private var _defaultResolver:FluentResolver;
 		
 		/**
 		 * Constructs a new FluentAsFactory.
@@ -17,8 +17,8 @@ package com.thedevstop.asfac
 		public function FluentAsFactory(factory:AsFactory = null)
 		{
 			_factory = factory || new AsFactory();
-			_registrar = new FluentRegistrar(_factory);
-			_resolver = new FluentResolver(_factory);
+			_defaultRegistrar = new FluentRegistrar(_factory);
+			_defaultResolver = new FluentResolver(_factory);
 		}
 		
 		/**
@@ -28,8 +28,7 @@ package com.thedevstop.asfac
 		 */
 		public function register(instance:*):IRegisterAsType
 		{
-			_registrar.inScope(AsFactory.DefaultScopeName);
-			return _registrar.register(instance);
+			return _defaultRegistrar.register(instance);
 		}
 		
 		/**
@@ -40,9 +39,9 @@ package com.thedevstop.asfac
 		public function inScope(scope:*):IRegister
 		{
 			if (scope is Class)
-				return _registrar.inScope(getQualifiedClassName(scope));
+				scope = getQualifiedClassName(scope);
 				
-			return _registrar.inScope(scope);
+			return new FluentRegistrar(_factory).inScope(scope);
 		}
 		
 		/**
@@ -53,9 +52,9 @@ package com.thedevstop.asfac
 		public function fromScope(scope:*):IResolve
 		{
 			if (scope is Class)
-				return _resolver.fromScope(getQualifiedClassName(scope));
+				scope = getQualifiedClassName(scope);
 			
-			return _resolver.fromScope(scope);
+			return new FluentResolver(_factory).fromScope(scope);
 		}
 		
 		/**
@@ -65,8 +64,7 @@ package com.thedevstop.asfac
 		 */
 		public function resolve(type:Class):*
 		{
-			_resolver.fromScope(AsFactory.DefaultScopeName);
-			return _resolver.resolve(type);
+			return _defaultResolver.resolve(type);
 		}
 	}
 }

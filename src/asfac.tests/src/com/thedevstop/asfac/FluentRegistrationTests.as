@@ -1,4 +1,4 @@
-﻿package com.thedevstop.asfac 
+package com.thedevstop.asfac 
 {
 	import asunit.framework.TestCase;
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
@@ -190,7 +190,7 @@
 			assertSame(defaultItem, instance);
 		}
 		
-		public function test_scoped_registrar_continues_registering_in_scope():void
+		public function test_scoped_registrar_registers_in_scope():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			var object:Object = { };
@@ -199,6 +199,26 @@
 			
 			var scopedRegistrar:IRegister = factory.inScope(scopeName);
 			scopedRegistrar.register(object).asType(Object);
+			scopedRegistrar.register(dictionary).asType(Dictionary);
+			
+			var objectInstance:Object = factory.fromScope(scopeName).resolve(Object);
+			var dictionaryInstance:Dictionary = factory.fromScope(scopeName).resolve(Dictionary);
+			
+			assertSame(objectInstance, object);
+			assertSame(dictionaryInstance, dictionary);
+		}
+		
+		public function test_scoped_registrar_continues_registering_in_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var object:Object = { };
+			var dictionary:Dictionary = new Dictionary();
+			var scopeName:String = "nonDefaultScope";
+			var anotherScopeName:String = "anotherNonDefaultScope";
+			
+			var scopedRegistrar:IRegister = factory.inScope(scopeName);
+			scopedRegistrar.register(object).asType(Object);
+			var anotherScopedRegistrar:IRegister = factory.inScope(anotherScopeName);
 			scopedRegistrar.register(dictionary).asType(Dictionary);
 			
 			var objectInstance:Object = factory.fromScope(scopeName).resolve(Object);
