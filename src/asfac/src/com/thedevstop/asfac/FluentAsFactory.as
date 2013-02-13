@@ -27,6 +27,7 @@ package com.thedevstop.asfac
 		 */
 		public function register(instance:*):IRegisterAsType
 		{
+			_registrar.inScope(AsFactory.DefaultScopeName);
 			return _registrar.register(instance);
 		}
 		
@@ -57,6 +58,7 @@ package com.thedevstop.asfac
 		 */
 		public function resolve(type:Class):*
 		{
+			_resolver.fromScope(AsFactory.DefaultScopeName);
 			return _resolver.resolve(type);
 		}
 	}
