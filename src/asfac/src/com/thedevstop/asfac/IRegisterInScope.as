@@ -15,9 +15,9 @@ package com.thedevstop.asfac
 		
 		/**
 		 * Register a dependency in a specific scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to register in the scope.
 		 */
-		function inScope(scopeName:String):IRegister
+		function inScope(scope:*):IRegister
 	}
 }

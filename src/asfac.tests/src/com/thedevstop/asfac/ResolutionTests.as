@@ -1,4 +1,4 @@
-package com.thedevstop.asfac 
+﻿package com.thedevstop.asfac 
 {
 	import asunit.framework.TestCase;
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
@@ -117,6 +117,17 @@ package com.thedevstop.asfac
 			assertSame(instance, obj);
 		}
 		
+		public function test_should_resolve_type_with_class_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var obj:Object = { numbers:[1, 2, 3] };
+			factory.register(obj, Object, HasObjectProperty);
+			
+			var instance:Object = factory.resolve(Object, HasObjectProperty);
+			assertSame(instance, obj);
+		}
+		
 		public function test_should_resolve_default_scope_if_registered():void
 		{
 			var factory:AsFactory = new AsFactory();
@@ -219,6 +230,88 @@ package com.thedevstop.asfac
 			var instance:Dictionary = factory.resolve(Dictionary);
 			
 			assertSame(instance, instanceDictionary);
+		}
+		
+		public function test_should_resolve_from_class_instance_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj:Object = { };
+
+			factory.register(Dictionary, Dictionary, Object);
+			var result:Object = factory.resolve(Dictionary, obj);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_should_resolve_from_class_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj:Object = { };
+
+			factory.register(Dictionary, Dictionary, obj);
+			var result:Object = factory.resolve(Dictionary, Object);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_scoped_resolve_resolves_constructor_dependencies_from_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			var scopedDictionary:Dictionary = new Dictionary();
+			
+			factory.register(ConstructorWithRequiredParameters, Object, scopeName);
+			factory.register(defaultDictionary, Dictionary);
+			factory.register(scopedDictionary, Dictionary, scopeName);
+			
+			var instance:ConstructorWithRequiredParameters = factory.resolve(Object, scopeName);
+			
+			assertSame(instance.dictionary, scopedDictionary);
+		}
+		
+		public function test_scoped_resolve_fallsback_to_defaultScope_for_constructor_dependencies():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(ConstructorWithRequiredParameters, Object, scopeName);
+			factory.register(defaultDictionary, Dictionary);
+			
+			var instance:ConstructorWithRequiredParameters = factory.resolve(Object, scopeName);
+			
+			assertSame(instance.dictionary, defaultDictionary);
+		}
+		
+		public function test_scoped_resolve_resolves_injected_properties_from_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			var scopedDictionary:Dictionary = new Dictionary();
+			
+			factory.register(HasObjectProperty, HasObjectProperty, scopeName);
+			factory.register(defaultDictionary, Object);
+			factory.register(scopedDictionary, Object, scopeName);
+			
+			var instance:HasObjectProperty = factory.resolve(HasObjectProperty, scopeName);
+			
+			assertSame(instance.theObject, scopedDictionary);
+		}		
+		
+		public function test_scoped_resolve_fallsback_to_defaultScope_for_injected_properties():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(HasObjectProperty, HasObjectProperty, scopeName);
+			factory.register(defaultDictionary, Object);
+			
+			var instance:HasObjectProperty = factory.resolve(HasObjectProperty, scopeName);
+			
+			assertSame(instance.theObject, defaultDictionary);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.thedevstop.asfac 
 {
 	import asunit.framework.TestCase;
+	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
 	import com.thedevstop.asfac.stubs.HasObjectProperty;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
@@ -152,6 +153,79 @@ package com.thedevstop.asfac
 			var instance:Dictionary = AsFactoryLocator.factory.resolve(Dictionary);
 			
 			assertSame(instance, singletonDictionary);	
+		}
+		
+		public function test_should_be_able_to_use_class_as_registration_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+
+			factory.inScope(Object).register(Dictionary).asType(Dictionary);
+			var result:Object = factory.fromScope(Object).resolve(Dictionary);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_should_be_able_to_use_class_instance_as_registration_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var obj:Object = { };
+
+			factory.inScope(obj).register(Dictionary).asType(Dictionary);
+			var result:Object = factory.fromScope(obj).resolve(Dictionary);
+
+			assertTrue(result.constructor == Dictionary);
+		}
+
+		public function test_unscoped_register_uses_default_scope_after_scoped_register():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var defaultItem:Object = { };
+			var scopedItem:Object = new Dictionary();
+			var scopeName:String = "nonDefaultScope";
+			
+			factory.inScope(scopeName).register(scopedItem).asType(Object);
+			factory.register(defaultItem).asType(Object);
+			var instance:Object = factory.resolve(Object);
+			
+			assertSame(defaultItem, instance);
+		}
+		
+		public function test_scoped_registrar_registers_in_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var object:Object = { };
+			var dictionary:Dictionary = new Dictionary();
+			var scopeName:String = "nonDefaultScope";
+			
+			var scopedRegistrar:IRegister = factory.inScope(scopeName);
+			scopedRegistrar.register(object).asType(Object);
+			scopedRegistrar.register(dictionary).asType(Dictionary);
+			
+			var objectInstance:Object = factory.fromScope(scopeName).resolve(Object);
+			var dictionaryInstance:Dictionary = factory.fromScope(scopeName).resolve(Dictionary);
+			
+			assertSame(objectInstance, object);
+			assertSame(dictionaryInstance, dictionary);
+		}
+		
+		public function test_scoped_registrar_continues_registering_in_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var object:Object = { };
+			var dictionary:Dictionary = new Dictionary();
+			var scopeName:String = "nonDefaultScope";
+			var anotherScopeName:String = "anotherNonDefaultScope";
+			
+			var scopedRegistrar:IRegister = factory.inScope(scopeName);
+			scopedRegistrar.register(object).asType(Object);
+			var anotherScopedRegistrar:IRegister = factory.inScope(anotherScopeName);
+			scopedRegistrar.register(dictionary).asType(Dictionary);
+			
+			var objectInstance:Object = factory.fromScope(scopeName).resolve(Object);
+			var dictionaryInstance:Dictionary = factory.fromScope(scopeName).resolve(Dictionary);
+			
+			assertSame(objectInstance, object);
+			assertSame(dictionaryInstance, dictionary);
 		}
 	}
 }

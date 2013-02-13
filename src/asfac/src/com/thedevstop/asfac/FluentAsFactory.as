@@ -1,13 +1,14 @@
 package com.thedevstop.asfac 
 {
+	import avmplus.getQualifiedClassName;
 	/**
 	 * AsFactory wrapped in a fluent interface.
 	 */
 	public class FluentAsFactory implements IRegisterInScope, IResolveFromScope
 	{	
 		private var _factory:AsFactory;
-		private var _registrar:FluentRegistrar;
-		private var _resolver:FluentResolver;
+		private var _defaultRegistrar:FluentRegistrar;
+		private var _defaultResolver:FluentResolver;
 		
 		/**
 		 * Constructs a new FluentAsFactory.
@@ -16,8 +17,8 @@ package com.thedevstop.asfac
 		public function FluentAsFactory(factory:AsFactory = null)
 		{
 			_factory = factory || new AsFactory();
-			_registrar = new FluentRegistrar(_factory);
-			_resolver = new FluentResolver(_factory);
+			_defaultRegistrar = new FluentRegistrar(_factory);
+			_defaultResolver = new FluentResolver(_factory);
 		}
 		
 		/**
@@ -27,27 +28,33 @@ package com.thedevstop.asfac
 		 */
 		public function register(instance:*):IRegisterAsType
 		{
-			return _registrar.register(instance);
+			return _defaultRegistrar.register(instance);
 		}
 		
 		/**
 		 * Register a dependency in a specific scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to register in the scope.
 		 */
-		public function inScope(scopeName:String):IRegister
+		public function inScope(scope:*):IRegister
 		{
-			return _registrar.inScope(scopeName);
+			if (scope is Class)
+				scope = getQualifiedClassName(scope);
+				
+			return new FluentRegistrar(_factory).inScope(scope);
 		}
 		
 		/**
 		 * Resolve a dependency from a specifc scope.
-		 * @param	scopeName The name of the scope.
+		 * @param	scope The name or Class of the scope.
 		 * @return The ability to resolve from this scope.
 		 */
-		public function fromScope(scopeName:String):IResolve
+		public function fromScope(scope:*):IResolve
 		{
-			return _resolver.fromScope(scopeName);
+			if (scope is Class)
+				scope = getQualifiedClassName(scope);
+			
+			return new FluentResolver(_factory).fromScope(scope);
 		}
 		
 		/**
@@ -57,7 +64,7 @@ package com.thedevstop.asfac
 		 */
 		public function resolve(type:Class):*
 		{
-			return _resolver.resolve(type);
+			return _defaultResolver.resolve(type);
 		}
 	}
 }
