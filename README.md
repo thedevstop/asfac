@@ -176,6 +176,8 @@ var context:ApplicationContext = factory.resolve(ApplicationContext);
 
 Fluent scoped registrar and resolver
 
+These will continue to register and resolve types using the scope with which they were accessed.
+
 ``` actionscript
 var userRegistrar:IRegister = factory.inScope(User);
 userRegistrar.register(UserSaver).asType(ISaveEntity);
