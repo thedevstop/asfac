@@ -330,7 +330,7 @@ package com.thedevstop.asfac
 			assertSame(defaultItem, instance);
 		}
 		
-		public function test_scoped_resolver_continues_resolving_from_scope():void
+		public function test_scoped_resolver_resolves_from_scope():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();
 			var object:Object = { };
@@ -342,6 +342,26 @@ package com.thedevstop.asfac
 			
 			var scopedResolver:IResolve = factory.fromScope(scopeName);
 			var objectInstance:Object = scopedResolver.resolve(Object);
+			var dictionaryInstance:Dictionary = scopedResolver.resolve(Dictionary);
+			
+			assertSame(objectInstance, object);
+			assertSame(dictionaryInstance, dictionary);
+		}
+		
+		public function test_scoped_resolver_continues_resolving_from_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var object:Object = { };
+			var dictionary:Dictionary = new Dictionary();
+			var scopeName:String = "nonDefaultScope";
+			var anotherScopeName:String = "anotherNonDefaultScope";
+			
+			factory.inScope(scopeName).register(object).asType(Object);
+			factory.inScope(scopeName).register(dictionary).asType(Dictionary);
+			
+			var scopedResolver:IResolve = factory.fromScope(scopeName);
+			var objectInstance:Object = scopedResolver.resolve(Object);
+			var anotherScopedResolver:IResolve = factory.fromScope(anotherScopeName);
 			var dictionaryInstance:Dictionary = scopedResolver.resolve(Dictionary);
 			
 			assertSame(objectInstance, object);
