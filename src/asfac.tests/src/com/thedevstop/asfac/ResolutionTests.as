@@ -1,4 +1,4 @@
-﻿package com.thedevstop.asfac 
+package com.thedevstop.asfac 
 {
 	import asunit.framework.TestCase;
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
@@ -312,6 +312,19 @@
 			var instance:HasObjectProperty = factory.resolve(HasObjectProperty, scopeName);
 			
 			assertSame(instance.theObject, defaultDictionary);
+		}
+		
+		public function test_scoped_resolve_should_fallback_when_specified():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(defaultDictionary, Dictionary);
+			
+			var instance:Dictionary = factory.resolve(Dictionary, scopeName, true);
+			
+			assertSame(instance, defaultDictionary);			
 		}
 	}
 }
