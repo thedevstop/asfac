@@ -233,5 +233,65 @@ package com.thedevstop.asfac
 			
 			assertSame(instance, singletonDictionary);	
 		}
+		
+		public function test_scoped_resolve_resolves_constructor_dependencies_from_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			var scopedDictionary:Dictionary = new Dictionary();
+			
+			factory.register(defaultDictionary).asType(Dictionary);
+			factory.inScope(scopeName).register(scopedDictionary).asType(Dictionary);
+			factory.inScope(scopeName).register(ConstructorWithRequiredParameters).asType(Object);
+			
+			var instance:ConstructorWithRequiredParameters = factory.fromScope(scopeName).resolve(Object);
+			
+			assertSame(instance.dictionary, scopedDictionary);
+		}
+		
+		public function test_scoped_resolve_fallsback_to_defaultScope_for_constructor_dependencies():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(defaultDictionary).asType(Dictionary);
+			factory.inScope(scopeName).register(ConstructorWithRequiredParameters).asType(Object);
+			
+			var instance:ConstructorWithRequiredParameters = factory.fromScope(scopeName).resolve(Object);
+			
+			assertSame(instance.dictionary, defaultDictionary);
+		}
+		
+		public function test_scoped_resolve_resolves_injected_properties_from_scope():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			var scopedDictionary:Dictionary = new Dictionary();
+			
+			factory.register(defaultDictionary).asType(Object);
+			factory.inScope(scopeName).register(scopedDictionary).asType(Object);
+			factory.inScope(scopeName).register(HasObjectProperty).asType(HasObjectProperty);
+			
+			var instance:HasObjectProperty = factory.fromScope(scopeName).resolve(HasObjectProperty);
+			
+			assertSame(instance.theObject, scopedDictionary);
+		}		
+		
+		public function test_scoped_resolve_fallsback_to_defaultScope_for_injected_properties():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(defaultDictionary).asType(Object);
+			factory.inScope(scopeName).register(HasObjectProperty).asType(HasObjectProperty);
+			
+			var instance:HasObjectProperty = factory.fromScope(scopeName).resolve(HasObjectProperty);
+			
+			assertSame(instance.theObject, defaultDictionary);
+		}
 	}
 }

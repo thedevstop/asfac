@@ -220,5 +220,65 @@ package com.thedevstop.asfac
 			
 			assertSame(instance, instanceDictionary);
 		}
+		
+		public function test_scoped_resolve_resolves_constructor_dependencies_from_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			var scopedDictionary:Dictionary = new Dictionary();
+			
+			factory.register(ConstructorWithRequiredParameters, Object, scopeName);
+			factory.register(defaultDictionary, Dictionary);
+			factory.register(scopedDictionary, Dictionary, scopeName);
+			
+			var instance:ConstructorWithRequiredParameters = factory.resolve(Object, scopeName);
+			
+			assertSame(instance.dictionary, scopedDictionary);
+		}
+		
+		public function test_scoped_resolve_fallsback_to_defaultScope_for_constructor_dependencies():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(ConstructorWithRequiredParameters, Object, scopeName);
+			factory.register(defaultDictionary, Dictionary);
+			
+			var instance:ConstructorWithRequiredParameters = factory.resolve(Object, scopeName);
+			
+			assertSame(instance.dictionary, defaultDictionary);
+		}
+		
+		public function test_scoped_resolve_resolves_injected_properties_from_scope():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			var scopedDictionary:Dictionary = new Dictionary();
+			
+			factory.register(HasObjectProperty, HasObjectProperty, scopeName);
+			factory.register(defaultDictionary, Object);
+			factory.register(scopedDictionary, Object, scopeName);
+			
+			var instance:HasObjectProperty = factory.resolve(HasObjectProperty, scopeName);
+			
+			assertSame(instance.theObject, scopedDictionary);
+		}		
+		
+		public function test_scoped_resolve_fallsback_to_defaultScope_for_injected_properties():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			
+			factory.register(HasObjectProperty, HasObjectProperty, scopeName);
+			factory.register(defaultDictionary, Object);
+			
+			var instance:HasObjectProperty = factory.resolve(HasObjectProperty, scopeName);
+			
+			assertSame(instance.theObject, defaultDictionary);
+		}
 	}
 }
