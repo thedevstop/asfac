@@ -29,11 +29,15 @@ package com.thedevstop.asfac
 		 * Registers a way of resolving a dependency when requested.
 		 * @param	instance How the dependency should be resolved. It can be either a Type, Instance, or Callback function.
 		 * @param	type The target type for which the instance should be returned at resolution time.
-		 * @param	scopeName The named scope for the registration.
+		 * @param	scope The named string or Class scope for the registration.
 		 * @param	asSingleton If true, the resolved dependency will be cached and returned each time the type is resolved.
 		 */
-		public function register(instance:*, type:Class, scopeName:String = DefaultScopeName, asSingleton:Boolean=false):void
+		public function register(instance:*, type:Class, scope:* = DefaultScopeName, asSingleton:Boolean=false):void
 		{
+			var scopeName:String = scope is String 
+				? scope
+				: getQualifiedClassName(scope);
+
 			if (instance is Class)
 				registerType(instance, type, scopeName, asSingleton);
 			else if (instance is Function)
@@ -69,7 +73,7 @@ package com.thedevstop.asfac
 		{
 			var resolveType:Function = function():Object
 			{
-				return resolveByClass(instanceType);
+				return resolveByClass(instanceType, scopeName);
 			};
 			
 			registerCallback(resolveType, type, scopeName, asSingleton);
@@ -115,29 +119,41 @@ package com.thedevstop.asfac
 		/**
 		 * Returns an instance for the target type, using prior registrations to fulfill constructor parameters.
 		 * @param	type The type being requested.
+		 * @param	scope The name or Class of the scope being resolved from.
+		 * @param 	useDefaultAsFallback Whether to use the DefaultScope as a fallback when registration not found in specified scope.
 		 * @return The resolved instance.
 		 */
-		public function resolve(type:Class, scopeName:String = DefaultScopeName):*
+		public function resolve(type:Class, scope:*=DefaultScopeName, useDefaultAsFallback:Boolean=false):*
 		{
 			var registrationsByScope:Dictionary = _registrations[type];
 			
+			var scopeName:String = scope is String 
+				? scope
+				: getQualifiedClassName(scope);
+
 			if (registrationsByScope)
 			{
 				if (registrationsByScope[scopeName])
 					return registrationsByScope[scopeName](this, scopeName);
 				else if (scopeName != DefaultScopeName)
-					throw new ArgumentError("Type being resolved has not been registered for scope named " + scopeName);
+				{
+					if (useDefaultAsFallback)
+						return resolve(type);
+					else
+						throw new ArgumentError("Type being resolved has not been registered for scope named " + scopeName);
+				}
 			}
 			
-			return resolveByClass(type);
+			return resolveByClass(type, scopeName);
 		}
 		
 		/**
 		 * Resolves the desired type using prior registrations.
 		 * @param	type The type being requested.
+		 * @param	scopeName The name of the scope being resolved from.
 		 * @return The resolved instance.
 		 */
-		private function resolveByClass(type:Class):*
+		private function resolveByClass(type:Class, scopeName:String):*
 		{
 			if (!type)
 				throw new IllegalOperationError("Type cannot be null when resolving.");
@@ -147,9 +163,9 @@ package com.thedevstop.asfac
 			if (!typeDescription)
 				throw new IllegalOperationError("Interface must be registered before it can be resolved.");
 			
-			var parameters:Array = resolveConstructorParameters(typeDescription);
+			var parameters:Array = resolveConstructorParameters(typeDescription, scopeName);
 			var instance:Object = createObject(type, parameters);
-			injectProperties(instance, typeDescription);
+			injectProperties(instance, typeDescription, scopeName);
 			
 			return instance;
 		}
@@ -266,14 +282,15 @@ package com.thedevstop.asfac
 		/**
 		 * Resolves the non-optional parameters for a constructor.
 		 * @param	typeDescription The optimized description of the type.
+		 * @param	scopeName The scope being resolved from.
 		 * @return An array of objects to use as constructor arguments.
 		 */
-		private function resolveConstructorParameters(typeDescription:Object):Array
+		private function resolveConstructorParameters(typeDescription:Object, scopeName:String):Array
 		{
 			var parameters:Array = [];
 			
 			for each (var parameterType:Class in typeDescription.constructorTypes)
-				parameters.push(resolve(parameterType));
+				parameters.push(resolve(parameterType, scopeName, true));
 			
 			return parameters;
 		}
@@ -282,11 +299,12 @@ package com.thedevstop.asfac
 		 * Resolves the properties on the instance object that are marked 'Inject'.
 		 * @param	instance The object to be inspected.
 		 * @param	typeDescription The optimized description of the type.
+		 * @param	scopeName The scope being resolved from.
 		 */
-		private function injectProperties(instance:Object, typeDescription:Object):void
+		private function injectProperties(instance:Object, typeDescription:Object, scopeName:String):void
 		{
 			for each (var injectableProperty:Object in typeDescription.injectableProperties)
-				instance[injectableProperty.name] = resolve(injectableProperty.type);
+				instance[injectableProperty.name] = resolve(injectableProperty.type, scopeName, true);
 		}
 	}
 }
