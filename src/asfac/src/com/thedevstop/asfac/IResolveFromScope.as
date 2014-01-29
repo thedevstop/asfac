@@ -18,5 +18,12 @@ package com.thedevstop.asfac
 		 * @return	The ability to resolve from this scope.
 		 */
 		function resolve(type:Class):*
+		
+		/**
+		 * Return all instances of a registered type from all scopes.
+		 * @param	type The type being requested.
+		 * @return An Array of all the resolved instances.
+		 */
+		function resolveAll(type:Class):Array
 	}	
 }

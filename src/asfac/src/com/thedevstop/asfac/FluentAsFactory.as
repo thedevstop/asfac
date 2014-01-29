@@ -1,6 +1,5 @@
 package com.thedevstop.asfac 
 {
-	import avmplus.getQualifiedClassName;
 	/**
 	 * AsFactory wrapped in a fluent interface.
 	 */
@@ -19,6 +18,7 @@ package com.thedevstop.asfac
 			_factory = factory || new AsFactory();
 			_defaultRegistrar = new FluentRegistrar(_factory);
 			_defaultResolver = new FluentResolver(_factory);
+			register(this).asType(FluentAsFactory);
 		}
 		
 		/**
@@ -38,9 +38,6 @@ package com.thedevstop.asfac
 		 */
 		public function inScope(scope:*):IRegister
 		{
-			if (scope is Class)
-				scope = getQualifiedClassName(scope);
-				
 			return new FluentRegistrar(_factory).inScope(scope);
 		}
 		
@@ -51,9 +48,6 @@ package com.thedevstop.asfac
 		 */
 		public function fromScope(scope:*):IResolve
 		{
-			if (scope is Class)
-				scope = getQualifiedClassName(scope);
-			
 			return new FluentResolver(_factory).fromScope(scope);
 		}
 		
@@ -65,6 +59,16 @@ package com.thedevstop.asfac
 		public function resolve(type:Class):*
 		{
 			return _defaultResolver.resolve(type);
+		}
+		
+		/**
+		 * Return all instances of a registered type from all scopes.
+		 * @param	type The type being requested.
+		 * @return An Array of all the resolved instances.
+		 */
+		public function resolveAll(type:Class):Array 
+		{
+			return _factory.resolveAll(type);
 		}
 	}
 }

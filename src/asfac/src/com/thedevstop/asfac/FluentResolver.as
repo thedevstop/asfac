@@ -41,9 +41,22 @@ package com.thedevstop.asfac
 		 */
 		public function fromScope(scope:*):IResolve
 		{
+			if (scope is Class)
+				scope = getQualifiedClassName(scope);
+			
 			_scope = scope;
 			
 			return this;
+		}
+		
+		/**
+		 * Return all instances of a registered type from all scopes.
+		 * @param	type The type being requested.
+		 * @return An Array of all the resolved instances.
+		 */
+		public function resolveAll(type:Class):Array 
+		{
+			return _factory.resolveAll(type);
 		}
 	}
 }
