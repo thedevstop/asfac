@@ -159,8 +159,8 @@ package com.thedevstop.asfac
 			var registrationsByScope:Dictionary = _registrations[type];
 			if (registrationsByScope)
 			{
-				for (var scopeName:String in _registrations)
-					instances.push(_registrations[scopeName](this, scopeName));
+				for (var scopeName:String in registrationsByScope)
+					instances.push(registrationsByScope[scopeName](this, scopeName));
 			}
 			
 			return instances;
