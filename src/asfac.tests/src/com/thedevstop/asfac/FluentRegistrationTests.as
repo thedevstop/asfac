@@ -82,6 +82,17 @@ package com.thedevstop.asfac
 			assertSame(result1, result2);
 		}
 		
+		public function test_should_allow_register_type_as_singleton2():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			
+			factory.register(Dictionary).asSingleton();
+			
+			var result1:Object = factory.resolve(Dictionary);
+			var result2:Object = factory.resolve(Dictionary);
+			assertSame(result1, result2);
+		}
+		
 		public function test_should_retun_new_instances_when_not_registered_as_singleton():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();

@@ -8,6 +8,7 @@ package com.thedevstop.asfac
 	import flash.display.AVM1Movie;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
+	import mx.collections.ArrayCollection;
 	
 	/**
 	 * ...
@@ -255,7 +256,22 @@ package com.thedevstop.asfac
 
 			assertTrue(result.constructor == Dictionary);
 		}
-
+		
+		public function test_resolveAll_should_resolve_from_all_scopes():void
+		{
+			var factory:FluentAsFactory = new FluentAsFactory();
+			var obj1:Object = { };
+			var obj2:Object = { };
+			
+			factory.inScope("obj1").register(obj1).asType(Object);
+			factory.inScope("obj2").register(obj2).asType(Object);
+			
+			var results:ArrayCollection = new ArrayCollection(factory.resolveAll(Object));
+			
+			assertTrue(results.contains(obj1));
+			assertTrue(results.contains(obj2));
+		}
+		
 		public function test_scoped_resolve_resolves_constructor_dependencies_from_scope():void
 		{
 			var factory:FluentAsFactory = new FluentAsFactory();

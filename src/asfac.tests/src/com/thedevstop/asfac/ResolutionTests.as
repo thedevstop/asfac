@@ -6,6 +6,7 @@ package com.thedevstop.asfac
 	import com.thedevstop.asfac.stubs.IPoint;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
+	import mx.collections.ArrayCollection;
 	
 	/**
 	 * ...
@@ -241,6 +242,21 @@ package com.thedevstop.asfac
 			var result:Object = factory.resolve(Dictionary, obj);
 
 			assertTrue(result.constructor == Dictionary);
+		}
+		
+		public function test_resolveAll_should_resolve_from_all_scopes():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var obj1:Object = { };
+			var obj2:Object = { };
+			
+			factory.register(obj1, Object, "obj1");
+			factory.register(obj2, Object, "obj2");
+			
+			var results:ArrayCollection = new ArrayCollection(factory.resolveAll(Object));
+			
+			assertTrue(results.contains(obj1));
+			assertTrue(results.contains(obj2));
 		}
 
 		public function test_should_resolve_from_class_scope():void
