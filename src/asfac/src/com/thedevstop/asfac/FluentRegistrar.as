@@ -25,6 +25,8 @@ package com.thedevstop.asfac
 		public function register(instance:*):IRegisterAsType
 		{
 			_instance = instance;
+			_type = null;
+			_asSingleton = false;
 			
 			return this;
 		}
