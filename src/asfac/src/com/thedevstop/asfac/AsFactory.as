@@ -279,8 +279,8 @@ package com.thedevstop.asfac
 			{
 				if (hasInjectMetadata(variable))
 				{
-					var propertyType:Class = Class(getDefinitionByName(variable.@type.toString()));
-					typeDescription.injectableProperties.push( { name:variable.@name.toString(), type:propertyType } ); 
+					var variableType:Class = Class(getDefinitionByName(variable.@type.toString()));
+					typeDescription.injectableProperties.push( { name:variable.@name.toString(), type:variableType } ); 
 				}
 			}
 			
