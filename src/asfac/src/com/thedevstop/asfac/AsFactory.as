@@ -148,6 +148,25 @@ package com.thedevstop.asfac
 		}
 		
 		/**
+		 * Return all instances of a registered type from all scopes.
+		 * @param	type The type being requested.
+		 * @return An Array of all the resolved instances.
+		 */
+		public function resolveAll(type:Class):Array
+		{
+			var instances:Array = [];
+			
+			var registrationsByScope:Dictionary = _registrations[type];
+			if (registrationsByScope)
+			{
+				for (var scopeName:String in registrationsByScope)
+					instances.push(registrationsByScope[scopeName](this, scopeName));
+			}
+			
+			return instances;
+		}
+		
+		/**
 		 * Resolves the desired type using prior registrations.
 		 * @param	type The type being requested.
 		 * @param	scopeName The name of the scope being resolved from.
@@ -256,6 +275,15 @@ package com.thedevstop.asfac
 				}
 			}
 			
+			for each (var variable:XML in description.factory.variable)
+			{
+				if (hasInjectMetadata(variable))
+				{
+					var variableType:Class = Class(getDefinitionByName(variable.@type.toString()));
+					typeDescription.injectableProperties.push( { name:variable.@name.toString(), type:variableType } ); 
+				}
+			}
+			
 			return typeDescription;
 		}
 		
@@ -265,15 +293,22 @@ package com.thedevstop.asfac
 		 * @return True if the Inject metadata is present, otherwise false.
 		 */
 		private function shouldInjectAccessor(accessor:XML):Boolean
+		{			
+			return (accessor.@access == "readwrite" || accessor.@access == "writeonly") 
+				&& hasInjectMetadata(accessor);
+		}
+		
+		/**
+		 * Determines whether the member should be injected.
+		 * @param	member A variable or accessor node from a class description xml.
+		 * @return True if the Inject metadata is present, otherwise false.
+		 */
+		private function hasInjectMetadata(member:XML):Boolean
 		{				
-			if (accessor.@access == "readwrite" ||
-				accessor.@access == "write")
+			for each (var metadata:XML in member.metadata)
 			{
-				for each (var metadata:XML in accessor.metadata)
-				{
-					if (metadata.@name.toString() == "Inject")
-						return true;
-				}
+				if (metadata.@name.toString() == "Inject")
+					return true;
 			}
 			
 			return false;

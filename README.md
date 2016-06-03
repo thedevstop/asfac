@@ -63,6 +63,13 @@ factory.register(InMemoryUserRepository).asType(IUserRepository);
 var userRepository:IUserRepository = factory.resolve(IUserRepository);
 ```
 
+Register type as a singleton
+
+``` actionscript
+// Fluent
+factory.register(ApplicationModel).asSingleton();
+```
+
 Register type for instance (singleton instance on each request)
     
 ``` actionscript
@@ -113,6 +120,20 @@ factory.inScope(User).register(InMemoryUserRepository).asType(IRepository);
 var repository:IRepository = factory.fromScope(User).resolve(IRepository);
 ```
 
+Multi-register types for an interface
+
+``` actionscript
+// Standard
+factory.register(NaiveStrategy, IStrategy, NaiveStrategy, false);
+factory.register(ExpertStrategy, IStrategy, ExpertStrategy, false);
+var strategies:Array = factory.resolveAll(IStrategy);
+
+// Fluent
+factory.register(NaiveStrategy).forType(IStrategy);
+factory.register(ExpertStrategy).forType(IStrategy);
+var strategies:Array = factory.resolveAll(IStrategy);
+```
+
 Register an instance for interface
 
 ``` actionscript
@@ -144,7 +165,7 @@ factory.register(buildMyRepository).asType(IUserRepository);
 var userRepository:IUserRepository = factory.resolve(IUserRepository);
 ```
 
-Resovle type with property injection
+Resolve type with property injection
 
 ``` actionscript
 public class ApplicationContext

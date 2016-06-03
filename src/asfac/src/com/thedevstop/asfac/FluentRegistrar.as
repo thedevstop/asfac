@@ -25,6 +25,8 @@ package com.thedevstop.asfac
 		public function register(instance:*):IRegisterAsType
 		{
 			_instance = instance;
+			_type = null;
+			_asSingleton = false;
 			
 			return this;
 		}
@@ -36,6 +38,9 @@ package com.thedevstop.asfac
 		 */
 		public function inScope(scope:*):IRegister
 		{
+			if (scope is Class)
+				scope = getQualifiedClassName(scope);
+			
 			_scope = scope;
 			
 			return this;
@@ -56,10 +61,21 @@ package com.thedevstop.asfac
 		}
 		
 		/**
+		 * Continues the multi-registration by specifying the type of dependency.
+		 * @param	type The type of dependency this registration resolves.
+		 * @return The ability to specify the resolution is a singleton.
+		 */
+		public function forType(type:Class):IRegisterAsSingleton
+		{
+			return new FluentRegistrar(_factory).inScope(_instance).register(_instance).asType(type);
+		}
+		
+		/**
 		 * Finishes this registration by specifying that the instance should be treated as a singleton.
 		 */
 		public function asSingleton():void
 		{
+			_type = _type || _instance;
 			_asSingleton = true;
 			
 			updateRegistration();
