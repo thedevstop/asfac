@@ -100,18 +100,20 @@ package com.thedevstop.asfac
 			}
 			
 			if (asSingleton)
-				registrationsByScope[scopeName] = (function(callback:Function, scopeName:String):Function
+			{
+				registrationsByScope[scopeName] = (function(callback:Function, factory:AsFactory, scopeName:String):Function
 				{
 					var instance:Object = null;
 					
 					return function():Object
 					{
 						if (!instance)
-							instance = callback(this, scopeName);
+							instance = callback(factory, scopeName);
 						
 						return instance;
 					};
-				})(callback, scopeName);
+				})(callback, this, scopeName);
+			}
 			else
 				registrationsByScope[scopeName] = callback;
 		}
