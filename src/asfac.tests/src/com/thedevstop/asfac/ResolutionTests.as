@@ -168,7 +168,23 @@ package com.thedevstop.asfac
 			};
 			factory.register(resolveFunction, Dictionary, scope);
 			
-			var instance:Dictionary = factory.resolve(Dictionary);		
+			var instance:Dictionary = factory.resolve(Dictionary, scope);		
+		}
+		
+		public function test_should_pass_factory_into_callback_during_singleton_resolution():void
+		{
+			var factory:AsFactory = new AsFactory();
+			
+			var scope:String = "nonDefaultScope";
+			
+			var resolveFunction:Function = function (asFactory:AsFactory, scopeName:String):Object 
+			{
+				assertSame(factory, asFactory);
+				return new Dictionary();
+			};
+			factory.register(resolveFunction, Dictionary, scope, true);
+			
+			var instance:Dictionary = factory.resolve(Dictionary, scope);		
 		}
 		
 		public function test_should_pass_factory_and_scope_name_into_callback_during_resolution():void
