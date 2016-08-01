@@ -180,15 +180,56 @@ package com.thedevstop.asfac
 				throw new IllegalOperationError("Type cannot be null when resolving.");
 			
 			var typeDescription:Object = getTypeDescription(type);
-			
 			if (!typeDescription)
 				throw new IllegalOperationError("Interface must be registered before it can be resolved.");
+			
+			if (isVector(typeDescription.name))
+				return resolveVector(type, typeDescription.name);
 			
 			var parameters:Array = resolveConstructorParameters(typeDescription, scopeName);
 			var instance:Object = createObject(type, parameters);
 			injectProperties(instance, typeDescription, scopeName);
 			
 			return instance;
+		}
+		
+		/**
+		 * Checks whether a type name is a vector type.
+		 * @param	typeName The name of the type.
+		 * @return True if the typeName is a Vector type, otherwise false.
+		 */
+		private function isVector(typeName:String):Boolean
+		{
+			return typeName.indexOf("__AS3__.vec::Vector.<") == 0;
+		}
+		
+		/**
+		 * Resolves all the types registered for the vector item's type.
+		 * @param	type The vector class.
+		 * @param	typeName The vector type name.
+		 * @return A vector containing all the items registered for the vector's item type.
+		 */
+		private function resolveVector(type:Class, typeName:String):*
+		{
+			var itemType:Class = getVectorItemType(typeName);
+			var vector:* = createObject(type, []);
+			
+			var items:Array = resolveAll(itemType);
+			for each (var item:* in items)
+				vector.push(item);
+			
+			return vector;
+		}
+		
+		/**
+		 * Returns the class for the vector item's type.
+		 * @param	typeName The vector type name.
+		 * @return The type of vector item.
+		 */
+		private function getVectorItemType(typeName:String):Class
+		{
+			var itemTypeName:String = typeName.replace("__AS3__.vec::Vector.<", "").replace(">", "");
+			return Class(getDefinitionByName(itemTypeName));
 		}
 		
 		/**
@@ -252,8 +293,10 @@ package com.thedevstop.asfac
 		 */
 		private function buildTypeDescription(type:Class):Object
 		{
-			var typeDescription:Object = { constructorTypes:[], injectableProperties:[] };
+			var typeDescription:Object = { name: "", constructorTypes:[], injectableProperties:[] };
 			var description:XML = describeType(type);
+			
+			typeDescription.name = description.@name.toString();
 			
 			// Object does not extend class
 			if (description.factory.extendsClass.length() === 0 && type !== Object)
