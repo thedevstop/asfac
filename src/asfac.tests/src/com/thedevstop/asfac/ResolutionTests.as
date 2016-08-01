@@ -4,6 +4,7 @@ package com.thedevstop.asfac
 	import com.thedevstop.asfac.stubs.ConstructorWithRequiredParameters;
 	import com.thedevstop.asfac.stubs.HasObjectProperty;
 	import com.thedevstop.asfac.stubs.IPoint;
+	import com.thedevstop.asfac.stubs.InjectDictionaryVector;
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
 	import mx.collections.ArrayCollection;
@@ -357,6 +358,24 @@ package com.thedevstop.asfac
 			var instance:Dictionary = factory.resolve(Dictionary, scopeName, true);
 			
 			assertSame(instance, defaultDictionary);			
+		}
+		
+		public function test_injected_vector_resolve_should_resolve_all():void
+		{
+			var factory:AsFactory = new AsFactory();
+			var scopeName:String = "nonDefaultScope";
+			var defaultDictionary:Dictionary = new Dictionary();
+			var scopedDictionary:Dictionary = new Dictionary();
+			
+			factory.register(defaultDictionary, Dictionary, AsFactory.DefaultScopeName);
+			factory.register(scopedDictionary, Dictionary, scopeName);
+			
+			var instance:InjectDictionaryVector = factory.resolve(InjectDictionaryVector);
+			
+			assertTrue(instance.dictionaries.length == 2);
+			assertTrue(instance.dictionaries[0] == defaultDictionary || instance.dictionaries[0] == scopedDictionary);
+			assertTrue(instance.dictionaries[1] == defaultDictionary || instance.dictionaries[1] == scopedDictionary);
+			assertTrue(instance.dictionaries[0] != instance.dictionaries[1]);
 		}
 	}
 }
